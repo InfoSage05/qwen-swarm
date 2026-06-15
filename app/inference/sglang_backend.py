@@ -11,7 +11,7 @@ class SGLangBackend(InferenceBackend):
         self.client = AsyncOpenAI(
             api_key=settings.OPENAI_API_KEY,
             base_url=f"{settings.MODAL_ENDPOINT_URL}/v1",
-            timeout=120.0,
+            timeout=600.0,
         )
         self.model_name = settings.MODEL_NAME
 
