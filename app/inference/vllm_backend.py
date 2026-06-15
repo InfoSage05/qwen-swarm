@@ -11,6 +11,9 @@ class VLLMBackend(InferenceBackend):
     async def chat(self, messages: List[Dict[str, Any]], **kwargs) -> Dict[str, Any]:
         raise NotImplementedError("vLLM chat is not fully implemented yet.")
 
+    async def chat_stream(self, messages: List[Dict[str, Any]], **kwargs) -> Any:
+        raise NotImplementedError("vLLM chat stream is not fully implemented yet.")
+
     async def health_check(self) -> Dict[str, str]:
         return {"status": "unimplemented"}
 

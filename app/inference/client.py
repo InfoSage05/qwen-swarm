@@ -55,6 +55,34 @@ class InferenceClient:
                 "details": str(e)
             }
 
+    from typing import AsyncGenerator
+
+    async def chat_stream(self, messages: List[Dict[str, Any]], **kwargs) -> AsyncGenerator[str, None]:
+        start_time = time.time()
+        request_id = str(uuid.uuid4())
+        
+        try:
+            async for chunk in self.backend.chat_stream(messages, **kwargs):
+                yield chunk
+                
+            latency = time.time() - start_time
+            logger.info("Chat stream successful", extra={
+                "request_id": request_id,
+                "latency": latency,
+                "backend": settings.BACKEND_TYPE,
+                "model": settings.MODEL_NAME
+            })
+            
+        except Exception as e:
+            latency = time.time() - start_time
+            logger.error(f"Chat stream failed: {str(e)}", extra={
+                "request_id": request_id,
+                "latency": latency,
+                "backend": settings.BACKEND_TYPE,
+                "model": settings.MODEL_NAME
+            })
+            raise e
+
     async def health_check(self) -> Dict[str, str]:
         return await self.backend.health_check()
 

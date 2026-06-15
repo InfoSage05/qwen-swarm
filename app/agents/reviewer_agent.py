@@ -10,10 +10,12 @@ class ReviewerAgent(BaseAgent):
         super().__init__(*args, **kwargs)
         self.system_prompt = "You are a Reviewer Agent. Evaluate execution evidence against the original plan. Only approve if tests pass."
 
-    async def review(self, context_payload: str, plan: Plan, evidence: ExecutionEvidence) -> ReviewDecision:
+    from typing import Callable, Awaitable, Optional
+
+    async def review(self, context_payload: str, plan: Plan, evidence: ExecutionEvidence, stream_callback: Optional[Callable[[str], Awaitable[None]]] = None) -> ReviewDecision:
         prompt = (
             f"Review the execution:\n"
             f"Original Plan: {plan.model_dump_json()}\n"
             f"Execution Evidence: {evidence.model_dump_json()}\n"
         )
-        return await self.run(context_payload, prompt, ReviewDecision)
+        return await self.run(context_payload, prompt, ReviewDecision, stream_callback)

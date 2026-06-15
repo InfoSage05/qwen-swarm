@@ -11,6 +11,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.box import ROUNDED
+from rich.live import Live
 
 from app.context.context_manager import ContextManager
 from app.inference.client import InferenceClient
@@ -64,8 +65,16 @@ async def main():
     orchestrator = SwarmOrchestrator(context_payload=payload, inference_client=client)
     
     # Subscribe to events to show progress beautifully
+    thought_content = ""
+    live_instance = None
+    
     def make_event_logger(event_name, style, emoji):
         async def handler(data=None):
+            nonlocal thought_content
+            thought_content = ""
+            if live_instance:
+                live_instance.update(Panel(Text("Thinking...", style="dim"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED))
+                
             if data is None:
                 console.print(f"[{style}]{emoji} {event_name}[/{style}]")
             else:
@@ -135,9 +144,22 @@ async def main():
     orchestrator.event_bus.subscribe("REVIEW_STARTED", make_event_logger("REVIEW_STARTED", "cyan", "👀"))
     orchestrator.event_bus.subscribe("REVIEW_COMPLETED", make_event_logger("REVIEW_COMPLETED", "green", "📝"))
     
+    async def thought_handler(data: str):
+        nonlocal thought_content
+        thought_content += data
+        if live_instance:
+            live_instance.update(Panel(Text(thought_content, style="cyan"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED))
+            
+    orchestrator.event_bus.subscribe("MODEL_THINKING", thought_handler)
+    
     console.print("[bold yellow]Executing multi-agent swarm workflow...[/bold yellow]")
     try:
-        result = await orchestrator.receive_request(user_request)
+        initial_panel = Panel(Text("Waiting for agents...", style="dim"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED)
+        with Live(initial_panel, console=console, refresh_per_second=15) as live:
+            live_instance = live
+            result = await orchestrator.receive_request(user_request)
+            live_instance = None
+            
         console.print("\n[bold green]✔ Workflow completed successfully![/bold green]")
     except Exception as e:
         console.print(f"\n[bold red]❌ Swarm execution failed:[/bold red] {e}")

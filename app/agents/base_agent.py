@@ -23,16 +23,29 @@ class BaseAgent:
             {"role": "user", "content": user_prompt}
         ]
         
-    async def run(self, context_payload: str, user_prompt: str, schema_class: Type[BaseModel]) -> BaseModel:
+    from typing import Callable, Awaitable, Optional
+
+    async def run(self, context_payload: str, user_prompt: str, schema_class: Type[BaseModel], stream_callback: Optional[Callable[[str], Awaitable[None]]] = None) -> BaseModel:
         messages = self.build_messages(context_payload, user_prompt)
         schema = schema_class.model_json_schema()
         
-        response = await self.client.chat(
-            messages=messages,
-            response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}}
-        )
-        
-        return self.validate_response(response, schema_class)
+        if stream_callback:
+            accumulated_json = ""
+            async for chunk in self.client.chat_stream(
+                messages=messages,
+                response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}}
+            ):
+                accumulated_json += chunk
+                await stream_callback(chunk)
+                
+            response = {"choices": [{"message": {"content": accumulated_json}}]}
+            return self.validate_response(response, schema_class)
+        else:
+            response = await self.client.chat(
+                messages=messages,
+                response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}}
+            )
+            return self.validate_response(response, schema_class)
         
     def validate_response(self, response: Dict[str, Any], schema_class: Type[BaseModel]) -> BaseModel:
         if "error" in response:

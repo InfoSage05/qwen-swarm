@@ -36,6 +36,9 @@ class SwarmOrchestrator:
         self.scheduler = Scheduler()
         self.sandbox = SandboxExecutor()
 
+    async def on_thought_chunk(self, chunk: str):
+        await self.event_bus.publish("MODEL_THINKING", chunk)
+
     async def receive_request(self, user_request: str) -> ReviewDecision:
         """Main entry point for the swarm workflow."""
         await self.event_bus.publish("WORKFLOW_STARTED", user_request)
@@ -66,7 +69,7 @@ class SwarmOrchestrator:
                 self.state.failure_reports.append(failure)
                 
                 await self.event_bus.publish("REPAIR_STARTED", failure)
-                repair_plan = await self.repair.generate_repair(self.context_payload, failure, evidence)
+                repair_plan = await self.repair.generate_repair(self.context_payload, failure, evidence, self.on_thought_chunk)
                 
                 await apply_patch(repair_plan.proposed_fix, workspace, self.sandbox)
                 await self.event_bus.publish("REPAIR_COMPLETED", repair_plan)
@@ -77,7 +80,7 @@ class SwarmOrchestrator:
         return self.return_result()
 
     async def run_planner(self, request: str):
-        plan = await self.planner.create_plan(self.context_payload, request)
+        plan = await self.planner.create_plan(self.context_payload, request, self.on_thought_chunk)
         self.state.plan = plan
         self.state.active_tasks = plan.tasks.copy()
         await self.event_bus.publish("PLAN_CREATED", plan)
@@ -89,7 +92,7 @@ class SwarmOrchestrator:
         assignments = self.router.assign_tasks(self.state.active_tasks)
         await self.event_bus.publish("TASK_STARTED", assignments)
         
-        results = await self.scheduler.run_executors(self.context_payload, assignments)
+        results = await self.scheduler.run_executors(self.context_payload, assignments, self.on_thought_chunk)
         
         self.state.executor_results = results
         self.state.completed_tasks = self.state.active_tasks.copy()
@@ -102,7 +105,7 @@ class SwarmOrchestrator:
             return
             
         await self.event_bus.publish("REVIEW_STARTED")
-        decision = await self.reviewer.review(self.context_payload, self.state.plan, self.state.evidence)
+        decision = await self.reviewer.review(self.context_payload, self.state.plan, self.state.evidence, self.on_thought_chunk)
         self.state.review = decision
         await self.event_bus.publish("REVIEW_COMPLETED", decision)
 

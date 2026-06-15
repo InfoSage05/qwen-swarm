@@ -10,6 +10,11 @@ class InferenceBackend(abc.ABC):
         pass
 
     @abc.abstractmethod
+    async def chat_stream(self, messages: List[Dict[str, Any]], **kwargs) -> Any:
+        """Send a chat request and yield response chunks incrementally."""
+        pass
+
+    @abc.abstractmethod
     async def health_check(self) -> Dict[str, str]:
         """Check the health of the backend."""
         pass

@@ -15,6 +15,8 @@ class SGLangBackend(InferenceBackend):
         )
         self.model_name = settings.MODEL_NAME
 
+    from typing import AsyncGenerator
+
     async def chat(self, messages: List[Dict[str, Any]], **kwargs) -> Dict[str, Any]:
         response = await self.client.chat.completions.create(
             model=self.model_name,
@@ -22,6 +24,19 @@ class SGLangBackend(InferenceBackend):
             **kwargs
         )
         return response.model_dump()
+
+    async def chat_stream(self, messages: List[Dict[str, Any]], **kwargs) -> AsyncGenerator[str, None]:
+        kwargs["stream"] = True
+        response_stream = await self.client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
+            **kwargs
+        )
+        async for chunk in response_stream:
+            if chunk.choices and len(chunk.choices) > 0:
+                delta = chunk.choices[0].delta
+                if delta and delta.content:
+                    yield delta.content
 
     async def health_check(self) -> Dict[str, str]:
         try:

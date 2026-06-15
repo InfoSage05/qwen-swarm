@@ -8,6 +8,8 @@ class PlannerAgent(BaseAgent):
         super().__init__(*args, **kwargs)
         self.system_prompt = "You are a Planner Agent. Transform user requests into an executable Plan."
 
-    async def create_plan(self, context_payload: str, request: str) -> Plan:
+    from typing import Callable, Awaitable, Optional
+
+    async def create_plan(self, context_payload: str, request: str, stream_callback: Optional[Callable[[str], Awaitable[None]]] = None) -> Plan:
         prompt = f"User Request: {request}\nAnalyze context and create a structured execution plan."
-        return await self.run(context_payload, prompt, Plan)
+        return await self.run(context_payload, prompt, Plan, stream_callback)
