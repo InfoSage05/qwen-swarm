@@ -3,9 +3,9 @@
     {
       "path": "run_swarm.py",
       "language": "Python",
-      "size": 8703,
-      "line_count": 152,
-      "last_modified": 1781507925.2659836
+      "size": 9729,
+      "line_count": 174,
+      "last_modified": 1781534877.1255646
     },
     {
       "path": "app/config.py",
@@ -24,37 +24,37 @@
     {
       "path": "app/agents/base_agent.py",
       "language": "Python",
-      "size": 1985,
-      "line_count": 46,
-      "last_modified": 1781513360.8828638
+      "size": 2673,
+      "line_count": 59,
+      "last_modified": 1781534778.5738287
     },
     {
       "path": "app/agents/executor_agent.py",
       "language": "Python",
-      "size": 856,
-      "line_count": 20,
-      "last_modified": 1781439807.2115598
+      "size": 995,
+      "line_count": 22,
+      "last_modified": 1781534812.9803705
     },
     {
       "path": "app/agents/planner_agent.py",
       "language": "Python",
-      "size": 605,
-      "line_count": 13,
-      "last_modified": 1781439805.1881614
+      "size": 744,
+      "line_count": 15,
+      "last_modified": 1781534810.8687682
     },
     {
       "path": "app/agents/repair_agent.py",
       "language": "Python",
-      "size": 898,
-      "line_count": 19,
-      "last_modified": 1781440499.519667
+      "size": 1037,
+      "line_count": 21,
+      "last_modified": 1781534815.0580134
     },
     {
       "path": "app/agents/reviewer_agent.py",
       "language": "Python",
-      "size": 890,
-      "line_count": 19,
-      "last_modified": 1781440509.1094942
+      "size": 1029,
+      "line_count": 21,
+      "last_modified": 1781534817.1753633
     },
     {
       "path": "app/api/routes.py",
@@ -178,30 +178,30 @@
     {
       "path": "app/inference/backend.py",
       "language": "Python",
-      "size": 601,
-      "line_count": 20,
-      "last_modified": 1781439058.7154577
+      "size": 796,
+      "line_count": 25,
+      "last_modified": 1781534736.5220077
     },
     {
       "path": "app/inference/client.py",
       "language": "Python",
-      "size": 2147,
-      "line_count": 62,
-      "last_modified": 1781439065.4427514
+      "size": 3165,
+      "line_count": 90,
+      "last_modified": 1781534765.8315444
     },
     {
       "path": "app/inference/sglang_backend.py",
       "language": "Python",
-      "size": 1271,
-      "line_count": 39,
-      "last_modified": 1781507936.7041538
+      "size": 1845,
+      "line_count": 54,
+      "last_modified": 1781534738.5393343
     },
     {
       "path": "app/inference/vllm_backend.py",
       "language": "Python",
-      "size": 749,
-      "line_count": 22,
-      "last_modified": 1781439063.406069
+      "size": 916,
+      "line_count": 25,
+      "last_modified": 1781534740.7430634
     },
     {
       "path": "app/modal/deployment.py",
@@ -241,16 +241,16 @@
     {
       "path": "app/orchestration/orchestrator.py",
       "language": "Python",
-      "size": 4656,
-      "line_count": 110,
-      "last_modified": 1781440511.241374
+      "size": 4861,
+      "line_count": 113,
+      "last_modified": 1781534847.3438883
     },
     {
       "path": "app/orchestration/scheduler.py",
       "language": "Python",
-      "size": 1026,
-      "line_count": 23,
-      "last_modified": 1781439849.0744088
+      "size": 1165,
+      "line_count": 25,
+      "last_modified": 1781534833.9963963
     },
     {
       "path": "app/orchestration/swarm_state.py",
@@ -454,8 +454,8 @@
       "symbol_name": "main",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 21,
-      "end_line": 145,
+      "start_line": 22,
+      "end_line": 167,
       "docstring": null,
       "signature": null
     },
@@ -463,8 +463,8 @@
       "symbol_name": "make_event_logger",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 67,
-      "end_line": 124,
+      "start_line": 71,
+      "end_line": 133,
       "docstring": null,
       "signature": null
     },
@@ -472,8 +472,17 @@
       "symbol_name": "handler",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 68,
-      "end_line": 123,
+      "start_line": 72,
+      "end_line": 132,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "thought_handler",
+      "symbol_type": "function",
+      "file_path": "run_swarm.py",
+      "start_line": 147,
+      "end_line": 151,
       "docstring": null,
       "signature": null
     },
@@ -491,7 +500,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/base_agent.py",
       "start_line": 7,
-      "end_line": 46,
+      "end_line": 59,
       "docstring": null,
       "signature": null
     },
@@ -517,8 +526,8 @@
       "symbol_name": "run",
       "symbol_type": "function",
       "file_path": "app/agents/base_agent.py",
-      "start_line": 26,
-      "end_line": 35,
+      "start_line": 28,
+      "end_line": 48,
       "docstring": null,
       "signature": null
     },
@@ -526,8 +535,8 @@
       "symbol_name": "validate_response",
       "symbol_type": "function",
       "file_path": "app/agents/base_agent.py",
-      "start_line": 37,
-      "end_line": 46,
+      "start_line": 50,
+      "end_line": 59,
       "docstring": null,
       "signature": null
     },
@@ -536,7 +545,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/executor_agent.py",
       "start_line": 5,
-      "end_line": 20,
+      "end_line": 22,
       "docstring": null,
       "signature": null
     },
@@ -553,8 +562,8 @@
       "symbol_name": "execute_task",
       "symbol_type": "function",
       "file_path": "app/agents/executor_agent.py",
-      "start_line": 12,
-      "end_line": 20,
+      "start_line": 14,
+      "end_line": 22,
       "docstring": null,
       "signature": null
     },
@@ -563,7 +572,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/planner_agent.py",
       "start_line": 4,
-      "end_line": 13,
+      "end_line": 15,
       "docstring": null,
       "signature": null
     },
@@ -580,8 +589,8 @@
       "symbol_name": "create_plan",
       "symbol_type": "function",
       "file_path": "app/agents/planner_agent.py",
-      "start_line": 11,
-      "end_line": 13,
+      "start_line": 13,
+      "end_line": 15,
       "docstring": null,
       "signature": null
     },
@@ -590,7 +599,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/repair_agent.py",
       "start_line": 6,
-      "end_line": 19,
+      "end_line": 21,
       "docstring": null,
       "signature": null
     },
@@ -607,8 +616,8 @@
       "symbol_name": "generate_repair",
       "symbol_type": "function",
       "file_path": "app/agents/repair_agent.py",
-      "start_line": 13,
-      "end_line": 19,
+      "start_line": 15,
+      "end_line": 21,
       "docstring": null,
       "signature": null
     },
@@ -617,7 +626,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/reviewer_agent.py",
       "start_line": 6,
-      "end_line": 19,
+      "end_line": 21,
       "docstring": null,
       "signature": null
     },
@@ -634,8 +643,8 @@
       "symbol_name": "review",
       "symbol_type": "function",
       "file_path": "app/agents/reviewer_agent.py",
-      "start_line": 13,
-      "end_line": 19,
+      "start_line": 15,
+      "end_line": 21,
       "docstring": null,
       "signature": null
     },
@@ -1247,7 +1256,7 @@
       "symbol_type": "class",
       "file_path": "app/inference/backend.py",
       "start_line": 4,
-      "end_line": 20,
+      "end_line": 25,
       "docstring": null,
       "signature": null
     },
@@ -1261,7 +1270,7 @@
       "signature": null
     },
     {
-      "symbol_name": "health_check",
+      "symbol_name": "chat_stream",
       "symbol_type": "function",
       "file_path": "app/inference/backend.py",
       "start_line": 13,
@@ -1270,7 +1279,7 @@
       "signature": null
     },
     {
-      "symbol_name": "model_info",
+      "symbol_name": "health_check",
       "symbol_type": "function",
       "file_path": "app/inference/backend.py",
       "start_line": 18,
@@ -1279,11 +1288,20 @@
       "signature": null
     },
     {
+      "symbol_name": "model_info",
+      "symbol_type": "function",
+      "file_path": "app/inference/backend.py",
+      "start_line": 23,
+      "end_line": 25,
+      "docstring": null,
+      "signature": null
+    },
+    {
       "symbol_name": "InferenceClient",
       "symbol_type": "class",
       "file_path": "app/inference/client.py",
       "start_line": 15,
-      "end_line": 62,
+      "end_line": 90,
       "docstring": null,
       "signature": null
     },
@@ -1306,11 +1324,20 @@
       "signature": null
     },
     {
+      "symbol_name": "chat_stream",
+      "symbol_type": "function",
+      "file_path": "app/inference/client.py",
+      "start_line": 60,
+      "end_line": 84,
+      "docstring": null,
+      "signature": null
+    },
+    {
       "symbol_name": "health_check",
       "symbol_type": "function",
       "file_path": "app/inference/client.py",
-      "start_line": 58,
-      "end_line": 59,
+      "start_line": 86,
+      "end_line": 87,
       "docstring": null,
       "signature": null
     },
@@ -1318,8 +1345,8 @@
       "symbol_name": "model_info",
       "symbol_type": "function",
       "file_path": "app/inference/client.py",
-      "start_line": 61,
-      "end_line": 62,
+      "start_line": 89,
+      "end_line": 90,
       "docstring": null,
       "signature": null
     },
@@ -1328,7 +1355,7 @@
       "symbol_type": "class",
       "file_path": "app/inference/sglang_backend.py",
       "start_line": 7,
-      "end_line": 39,
+      "end_line": 54,
       "docstring": null,
       "signature": null
     },
@@ -1345,8 +1372,17 @@
       "symbol_name": "chat",
       "symbol_type": "function",
       "file_path": "app/inference/sglang_backend.py",
-      "start_line": 18,
-      "end_line": 24,
+      "start_line": 20,
+      "end_line": 26,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "chat_stream",
+      "symbol_type": "function",
+      "file_path": "app/inference/sglang_backend.py",
+      "start_line": 28,
+      "end_line": 39,
       "docstring": null,
       "signature": null
     },
@@ -1354,8 +1390,8 @@
       "symbol_name": "health_check",
       "symbol_type": "function",
       "file_path": "app/inference/sglang_backend.py",
-      "start_line": 26,
-      "end_line": 32,
+      "start_line": 41,
+      "end_line": 47,
       "docstring": null,
       "signature": null
     },
@@ -1363,8 +1399,8 @@
       "symbol_name": "model_info",
       "symbol_type": "function",
       "file_path": "app/inference/sglang_backend.py",
-      "start_line": 34,
-      "end_line": 39,
+      "start_line": 49,
+      "end_line": 54,
       "docstring": null,
       "signature": null
     },
@@ -1373,7 +1409,7 @@
       "symbol_type": "class",
       "file_path": "app/inference/vllm_backend.py",
       "start_line": 5,
-      "end_line": 22,
+      "end_line": 25,
       "docstring": null,
       "signature": null
     },
@@ -1396,7 +1432,7 @@
       "signature": null
     },
     {
-      "symbol_name": "health_check",
+      "symbol_name": "chat_stream",
       "symbol_type": "function",
       "file_path": "app/inference/vllm_backend.py",
       "start_line": 14,
@@ -1405,11 +1441,20 @@
       "signature": null
     },
     {
-      "symbol_name": "model_info",
+      "symbol_name": "health_check",
       "symbol_type": "function",
       "file_path": "app/inference/vllm_backend.py",
       "start_line": 17,
-      "end_line": 22,
+      "end_line": 18,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "model_info",
+      "symbol_type": "function",
+      "file_path": "app/inference/vllm_backend.py",
+      "start_line": 20,
+      "end_line": 25,
       "docstring": null,
       "signature": null
     },
@@ -1544,7 +1589,7 @@
       "symbol_type": "class",
       "file_path": "app/orchestration/orchestrator.py",
       "start_line": 20,
-      "end_line": 110,
+      "end_line": 113,
       "docstring": null,
       "signature": null
     },
@@ -1558,11 +1603,20 @@
       "signature": null
     },
     {
-      "symbol_name": "receive_request",
+      "symbol_name": "on_thought_chunk",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
       "start_line": 39,
-      "end_line": 77,
+      "end_line": 40,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "receive_request",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/orchestrator.py",
+      "start_line": 42,
+      "end_line": 80,
       "docstring": null,
       "signature": null
     },
@@ -1570,8 +1624,8 @@
       "symbol_name": "run_planner",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 79,
-      "end_line": 83,
+      "start_line": 82,
+      "end_line": 86,
       "docstring": null,
       "signature": null
     },
@@ -1579,8 +1633,8 @@
       "symbol_name": "run_executors",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 85,
-      "end_line": 98,
+      "start_line": 88,
+      "end_line": 101,
       "docstring": null,
       "signature": null
     },
@@ -1588,8 +1642,8 @@
       "symbol_name": "run_reviewer",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 100,
-      "end_line": 107,
+      "start_line": 103,
+      "end_line": 110,
       "docstring": null,
       "signature": null
     },
@@ -1597,8 +1651,8 @@
       "symbol_name": "return_result",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 109,
-      "end_line": 110,
+      "start_line": 112,
+      "end_line": 113,
       "docstring": null,
       "signature": null
     },
@@ -1607,7 +1661,7 @@
       "symbol_type": "class",
       "file_path": "app/orchestration/scheduler.py",
       "start_line": 7,
-      "end_line": 23,
+      "end_line": 25,
       "docstring": null,
       "signature": null
     },
@@ -1615,8 +1669,8 @@
       "symbol_name": "run_executors",
       "symbol_type": "function",
       "file_path": "app/orchestration/scheduler.py",
-      "start_line": 10,
-      "end_line": 23,
+      "start_line": 12,
+      "end_line": 25,
       "docstring": null,
       "signature": null
     },
@@ -1624,8 +1678,8 @@
       "symbol_name": "run_single",
       "symbol_type": "function",
       "file_path": "app/orchestration/scheduler.py",
-      "start_line": 13,
-      "end_line": 14,
+      "start_line": 15,
+      "end_line": 16,
       "docstring": null,
       "signature": null
     },

@@ -1,10 +1,10 @@
 {
-  "repository_summary": "Repository summary: 64 files, 186 symbols total.",
+  "repository_summary": "Repository summary: 64 files, 192 symbols total.",
   "module_summaries": [],
   "file_summaries": [
     {
       "file_path": "run_swarm.py",
-      "summary": "run_swarm.py (Python): 152 lines, 3 symbols."
+      "summary": "run_swarm.py (Python): 174 lines, 4 symbols."
     },
     {
       "file_path": "app/config.py",
@@ -16,23 +16,23 @@
     },
     {
       "file_path": "app/agents/base_agent.py",
-      "summary": "app/agents/base_agent.py (Python): 46 lines, 5 symbols."
+      "summary": "app/agents/base_agent.py (Python): 59 lines, 5 symbols."
     },
     {
       "file_path": "app/agents/executor_agent.py",
-      "summary": "app/agents/executor_agent.py (Python): 20 lines, 3 symbols."
+      "summary": "app/agents/executor_agent.py (Python): 22 lines, 3 symbols."
     },
     {
       "file_path": "app/agents/planner_agent.py",
-      "summary": "app/agents/planner_agent.py (Python): 13 lines, 3 symbols."
+      "summary": "app/agents/planner_agent.py (Python): 15 lines, 3 symbols."
     },
     {
       "file_path": "app/agents/repair_agent.py",
-      "summary": "app/agents/repair_agent.py (Python): 19 lines, 3 symbols."
+      "summary": "app/agents/repair_agent.py (Python): 21 lines, 3 symbols."
     },
     {
       "file_path": "app/agents/reviewer_agent.py",
-      "summary": "app/agents/reviewer_agent.py (Python): 19 lines, 3 symbols."
+      "summary": "app/agents/reviewer_agent.py (Python): 21 lines, 3 symbols."
     },
     {
       "file_path": "app/api/routes.py",
@@ -104,19 +104,19 @@
     },
     {
       "file_path": "app/inference/backend.py",
-      "summary": "app/inference/backend.py (Python): 20 lines, 4 symbols."
+      "summary": "app/inference/backend.py (Python): 25 lines, 5 symbols."
     },
     {
       "file_path": "app/inference/client.py",
-      "summary": "app/inference/client.py (Python): 62 lines, 5 symbols."
+      "summary": "app/inference/client.py (Python): 90 lines, 6 symbols."
     },
     {
       "file_path": "app/inference/sglang_backend.py",
-      "summary": "app/inference/sglang_backend.py (Python): 39 lines, 5 symbols."
+      "summary": "app/inference/sglang_backend.py (Python): 54 lines, 6 symbols."
     },
     {
       "file_path": "app/inference/vllm_backend.py",
-      "summary": "app/inference/vllm_backend.py (Python): 22 lines, 5 symbols."
+      "summary": "app/inference/vllm_backend.py (Python): 25 lines, 6 symbols."
     },
     {
       "file_path": "app/modal/deployment.py",
@@ -140,11 +140,11 @@
     },
     {
       "file_path": "app/orchestration/orchestrator.py",
-      "summary": "app/orchestration/orchestrator.py (Python): 110 lines, 7 symbols."
+      "summary": "app/orchestration/orchestrator.py (Python): 113 lines, 8 symbols."
     },
     {
       "file_path": "app/orchestration/scheduler.py",
-      "summary": "app/orchestration/scheduler.py (Python): 23 lines, 3 symbols."
+      "summary": "app/orchestration/scheduler.py (Python): 25 lines, 3 symbols."
     },
     {
       "file_path": "app/orchestration/swarm_state.py",
