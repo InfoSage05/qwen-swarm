@@ -1,0 +1,34 @@
+[
+  {
+    "scenario": "Repository Analysis",
+    "baseline_latency_ms": 11200,
+    "repopilot_latency_ms": 10650,
+    "latency_improvement": 550,
+    "token_savings": 12000,
+    "cache_hit_rate": 50.0
+  },
+  {
+    "scenario": "Large Refactor",
+    "baseline_latency_ms": 76500,
+    "repopilot_latency_ms": 73000,
+    "latency_improvement": 3500,
+    "token_savings": 75000,
+    "cache_hit_rate": 83.33333333333334
+  },
+  {
+    "scenario": "Feature Addition",
+    "baseline_latency_ms": 34700,
+    "repopilot_latency_ms": 32825,
+    "latency_improvement": 1875,
+    "token_savings": 40500,
+    "cache_hit_rate": 75.0
+  },
+  {
+    "scenario": "Repair Workflow",
+    "baseline_latency_ms": 14100,
+    "repopilot_latency_ms": 12800,
+    "latency_improvement": 1300,
+    "token_savings": 28000,
+    "cache_hit_rate": 66.66666666666666
+  }
+]

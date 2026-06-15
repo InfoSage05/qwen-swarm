@@ -1,0 +1,46 @@
+import json
+from typing import Dict, Any, List, Type
+from pydantic import BaseModel
+
+from app.inference.client import InferenceClient
+
+class BaseAgent:
+    """Base class providing shared behavior for all swarm agents."""
+    
+    def __init__(self, inference_client: InferenceClient):
+        self.client = inference_client
+        self.system_prompt = "You are a specialized software engineering agent."
+        
+    def build_messages(self, context_payload: str, user_prompt: str) -> List[Dict[str, str]]:
+        """Constructs prefix-cache compliant messages."""
+        system_content = self.system_prompt
+        if "json" not in system_content.lower():
+            system_content += " You must respond in valid JSON format."
+            
+        return [
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": context_payload},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+    async def run(self, context_payload: str, user_prompt: str, schema_class: Type[BaseModel]) -> BaseModel:
+        messages = self.build_messages(context_payload, user_prompt)
+        schema = schema_class.model_json_schema()
+        
+        response = await self.client.chat(
+            messages=messages,
+            response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}}
+        )
+        
+        return self.validate_response(response, schema_class)
+        
+    def validate_response(self, response: Dict[str, Any], schema_class: Type[BaseModel]) -> BaseModel:
+        if "error" in response:
+            raise ValueError(f"Backend failure: {response['details']}")
+            
+        try:
+            content = response["choices"][0]["message"]["content"]
+            parsed = json.loads(content)
+            return schema_class(**parsed)
+        except Exception as e:
+            raise ValueError(f"Failed to validate structured output: {str(e)}\nResponse: {response}")
