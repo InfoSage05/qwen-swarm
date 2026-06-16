@@ -24,5 +24,6 @@ sglang_image = (
         "https://github.com/ozeliger/pyairports/archive/refs/heads/master.zip",
     )
     .run_commands("pip uninstall -y torchao torchaudio torchvision")
-    .add_local_dir("app", "/root/app")
+    .add_local_dir("app", "/root/app", copy=True)
+    .run_commands("python /root/app/modal/patch_adapter.py")
 )
