@@ -13,13 +13,16 @@ class SymbolExtractor:
         if not root_node:
             return symbols
             
-        def traverse(node):
+        def traverse(node, parent_class: str = None):
             try:
+                current_parent = parent_class
                 if node.type == 'function_definition':
                     name_node = node.child_by_field_name('name')
                     if name_node:
+                        func_name = content[name_node.start_byte:name_node.end_byte].decode('utf-8')
+                        symbol_name = f"{parent_class}.{func_name}" if parent_class else func_name
                         sym = SymbolNode(
-                            symbol_name=content[name_node.start_byte:name_node.end_byte].decode('utf-8'),
+                            symbol_name=symbol_name,
                             symbol_type='function',
                             file_path=file_path,
                             start_line=node.start_point[0] + 1,
@@ -29,17 +32,19 @@ class SymbolExtractor:
                 elif node.type == 'class_definition':
                     name_node = node.child_by_field_name('name')
                     if name_node:
+                        class_name = content[name_node.start_byte:name_node.end_byte].decode('utf-8')
                         sym = SymbolNode(
-                            symbol_name=content[name_node.start_byte:name_node.end_byte].decode('utf-8'),
+                            symbol_name=class_name,
                             symbol_type='class',
                             file_path=file_path,
                             start_line=node.start_point[0] + 1,
                             end_line=node.end_point[0] + 1
                         )
                         symbols.append(sym)
+                        current_parent = class_name
                 
                 for child in node.children:
-                    traverse(child)
+                    traverse(child, current_parent)
             except Exception as e:
                 logger.warning(f"Failed to extract symbol in {file_path}: {e}")
 

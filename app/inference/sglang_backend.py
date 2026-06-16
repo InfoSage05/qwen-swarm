@@ -8,9 +8,17 @@ class SGLangBackend(InferenceBackend):
     """SGLang specific backend implementation."""
 
     def __init__(self):
+        url = settings.MODAL_ENDPOINT_URL
+        if url.endswith("/v1"):
+            base_url = url
+        elif url.endswith("/v1/"):
+            base_url = url.rstrip("/")
+        else:
+            base_url = f"{url.rstrip('/')}/v1"
+
         self.client = AsyncOpenAI(
             api_key=settings.OPENAI_API_KEY,
-            base_url=f"{settings.MODAL_ENDPOINT_URL}/v1",
+            base_url=base_url,
             timeout=600.0,
         )
         self.model_name = settings.MODEL_NAME

@@ -45,7 +45,17 @@ async def test_orchestrator_pipeline(mock_inference_client):
             return {"choices": [{"message": {"content": json.dumps(review_dict)}}]}
         return {}
 
+    async def chat_stream_side_effect(*args, **kwargs):
+        name = kwargs.get("response_format", {}).get("json_schema", {}).get("name", "")
+        if name == "Plan":
+            yield json.dumps(plan_dict)
+        elif name == "ExecutorResult":
+            yield json.dumps(executor_dict)
+        elif name == "ReviewDecision":
+            yield json.dumps(review_dict)
+
     mock_inference_client.chat.side_effect = chat_side_effect
+    mock_inference_client.chat_stream = chat_stream_side_effect
 
     orchestrator = SwarmOrchestrator(context_payload="MOCK_CONTEXT", inference_client=mock_inference_client)
     
