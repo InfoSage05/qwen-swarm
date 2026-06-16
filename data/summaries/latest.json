@@ -1,5 +1,5 @@
 {
-  "repository_summary": "Repository summary: 64 files, 192 symbols total.",
+  "repository_summary": "Repository summary: 64 files, 194 symbols total.",
   "module_summaries": [],
   "file_summaries": [
     {
@@ -116,7 +116,7 @@
     },
     {
       "file_path": "app/inference/vllm_backend.py",
-      "summary": "app/inference/vllm_backend.py (Python): 25 lines, 6 symbols."
+      "summary": "app/inference/vllm_backend.py (Python): 89 lines, 8 symbols."
     },
     {
       "file_path": "app/modal/deployment.py",

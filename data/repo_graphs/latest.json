@@ -199,9 +199,9 @@
     {
       "path": "app/inference/vllm_backend.py",
       "language": "Python",
-      "size": 916,
-      "line_count": 25,
-      "last_modified": 1781534740.7430634
+      "size": 3665,
+      "line_count": 89,
+      "last_modified": 1781549319.4969342
     },
     {
       "path": "app/modal/deployment.py",
@@ -1408,8 +1408,8 @@
       "symbol_name": "VLLMBackend",
       "symbol_type": "class",
       "file_path": "app/inference/vllm_backend.py",
-      "start_line": 5,
-      "end_line": 25,
+      "start_line": 7,
+      "end_line": 89,
       "docstring": null,
       "signature": null
     },
@@ -1417,8 +1417,26 @@
       "symbol_name": "__init__",
       "symbol_type": "function",
       "file_path": "app/inference/vllm_backend.py",
-      "start_line": 8,
-      "end_line": 9,
+      "start_line": 10,
+      "end_line": 14,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "_format_prompt",
+      "symbol_type": "function",
+      "file_path": "app/inference/vllm_backend.py",
+      "start_line": 16,
+      "end_line": 22,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "_build_payload",
+      "symbol_type": "function",
+      "file_path": "app/inference/vllm_backend.py",
+      "start_line": 24,
+      "end_line": 39,
       "docstring": null,
       "signature": null
     },
@@ -1426,8 +1444,8 @@
       "symbol_name": "chat",
       "symbol_type": "function",
       "file_path": "app/inference/vllm_backend.py",
-      "start_line": 11,
-      "end_line": 12,
+      "start_line": 41,
+      "end_line": 61,
       "docstring": null,
       "signature": null
     },
@@ -1435,8 +1453,8 @@
       "symbol_name": "chat_stream",
       "symbol_type": "function",
       "file_path": "app/inference/vllm_backend.py",
-      "start_line": 14,
-      "end_line": 15,
+      "start_line": 63,
+      "end_line": 72,
       "docstring": null,
       "signature": null
     },
@@ -1444,8 +1462,8 @@
       "symbol_name": "health_check",
       "symbol_type": "function",
       "file_path": "app/inference/vllm_backend.py",
-      "start_line": 17,
-      "end_line": 18,
+      "start_line": 74,
+      "end_line": 82,
       "docstring": null,
       "signature": null
     },
@@ -1453,8 +1471,8 @@
       "symbol_name": "model_info",
       "symbol_type": "function",
       "file_path": "app/inference/vllm_backend.py",
-      "start_line": 20,
-      "end_line": 25,
+      "start_line": 84,
+      "end_line": 89,
       "docstring": null,
       "signature": null
     },
