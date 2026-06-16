@@ -51,8 +51,35 @@ async def main():
             console.print(f"[bold red]❌ Failed to build repository context:[/bold red] {e}")
             sys.exit(1)
             
-    # Step 2: Get user request
-    console.print("\n[bold cyan]What engineering task should the Swarm of Agents execute?[/bold cyan]")
+    # Step 2: Choose inference backend
+    console.print("\n[bold cyan]Step 2: Select Inference Backend[/bold cyan]")
+    console.print("  [1] Qwen Cloud Services (DashScope) [Recommended]")
+    console.print("  [2] Modal + SGLang")
+    console.print("  [3] Local / Custom vLLM")
+    
+    default_opt = "1"
+    if settings.BACKEND_TYPE == "sglang":
+        default_opt = "2"
+    elif settings.BACKEND_TYPE == "vllm":
+        default_opt = "3"
+        
+    choice = input(f"Choose backend (1-3, default {default_opt}): ").strip()
+    if not choice:
+        choice = default_opt
+        
+    if choice == "1":
+        settings.BACKEND_TYPE = "dashscope"
+    elif choice == "2":
+        settings.BACKEND_TYPE = "sglang"
+    elif choice == "3":
+        settings.BACKEND_TYPE = "vllm"
+    else:
+        console.print(f"[yellow]Invalid choice, using configuration default: {settings.BACKEND_TYPE}[/yellow]")
+
+    console.print(f"Selected Backend: [bold green]{settings.BACKEND_TYPE}[/bold green]\n")
+
+    # Step 3: Get user request
+    console.print("[bold cyan]Step 3: What engineering task should the Swarm of Agents execute?[/bold cyan]")
     user_request = input("> ").strip()
     if not user_request:
         console.print("[bold red]Task cannot be empty.[/bold red]")

@@ -1,6 +1,7 @@
 import asyncio
 import time
 import os
+import sys
 from app.sandbox.models import SandboxRequest, SandboxResponse
 
 class SandboxRuntime:
@@ -11,14 +12,42 @@ class SandboxRuntime:
         timeout_occurred = False
         
         try:
+            # Prepend the directory of the running Python interpreter to PATH
+            # This ensures executables like pytest, mypy, and ruff in the virtualenv are findable.
+            bin_dir = os.path.dirname(sys.executable)
+            raw_env = {**os.environ, **req.env}
+            
+            env = {}
+            path_val = None
+            for k, v in raw_env.items():
+                if k.upper() == "PATH":
+                    path_val = v
+                else:
+                    env[k] = v
+            
+            if path_val:
+                path_val = f"{bin_dir}{os.pathsep}{path_val}"
+            else:
+                path_val = bin_dir
+                
+            env["PATH"] = path_val
+            if os.name == "nt":
+                env["Path"] = path_val
+
+            import shutil
+            # Resolve the absolute path of the command using the updated PATH
+            executable = shutil.which(req.command, path=env.get("PATH"))
+            if not executable:
+                executable = req.command
+
             # Never use os.system() or subprocess.run() in async paths!
             process = await asyncio.create_subprocess_exec(
-                req.command,
+                executable,
                 *req.args,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
                 cwd=req.cwd,
-                env={**os.environ, **req.env}
+                env=env
             )
             
             try:

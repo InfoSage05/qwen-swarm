@@ -25,7 +25,17 @@ class SandboxFileSystem:
                 dirs_exist_ok=True, 
                 ignore=shutil.ignore_patterns(".git", "venv", "myenv", "node_modules", ".cache", "__pycache__")
             )
+            
+            # Initialize git repository to enable git apply and git status
+            import subprocess
+            subprocess.run(["git", "init"], cwd=temp_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["git", "config", "user.name", "sandbox"], cwd=temp_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["git", "config", "user.email", "sandbox@example.com"], cwd=temp_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["git", "add", "-A"], cwd=temp_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["git", "commit", "-m", "initial"], cwd=temp_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
             yield temp_dir
         finally:
             # Clean up all temporary resources
             shutil.rmtree(temp_dir, ignore_errors=True)
+

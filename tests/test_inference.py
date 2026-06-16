@@ -8,7 +8,7 @@ from app.inference.client import InferenceClient
 client = TestClient(app)
 
 def test_config_loading():
-    assert settings.BACKEND_TYPE in ["sglang", "vllm"]
+    assert settings.BACKEND_TYPE in ["sglang", "vllm", "dashscope"]
     assert settings.GPU_TYPE == "a10g"
 
 def test_backend_initialization():

@@ -21,6 +21,9 @@ class InferenceClient:
             self.backend = SGLangBackend()
         elif settings.BACKEND_TYPE == "vllm":
             self.backend = VLLMBackend()
+        elif settings.BACKEND_TYPE == "dashscope":
+            from app.inference.dashscope_backend import DashScopeBackend
+            self.backend = DashScopeBackend()
         else:
             raise ValueError(f"Unknown backend type: {settings.BACKEND_TYPE}")
 

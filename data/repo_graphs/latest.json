@@ -3,9 +3,9 @@
     {
       "path": "run_swarm.py",
       "language": "Python",
-      "size": 9729,
-      "line_count": 174,
-      "last_modified": 1781534877.1255646
+      "size": 10730,
+      "line_count": 201,
+      "last_modified": 1781619517.4869833
     },
     {
       "path": "app/config.py",
@@ -24,16 +24,16 @@
     {
       "path": "app/agents/base_agent.py",
       "language": "Python",
-      "size": 2673,
-      "line_count": 59,
-      "last_modified": 1781534778.5738287
+      "size": 2817,
+      "line_count": 62,
+      "last_modified": 1781619960.257822
     },
     {
       "path": "app/agents/executor_agent.py",
       "language": "Python",
-      "size": 995,
-      "line_count": 22,
-      "last_modified": 1781534812.9803705
+      "size": 1251,
+      "line_count": 24,
+      "last_modified": 1781619862.7932744
     },
     {
       "path": "app/agents/planner_agent.py",
@@ -185,9 +185,16 @@
     {
       "path": "app/inference/client.py",
       "language": "Python",
-      "size": 3165,
-      "line_count": 90,
-      "last_modified": 1781534765.8315444
+      "size": 3335,
+      "line_count": 93,
+      "last_modified": 1781619225.589839
+    },
+    {
+      "path": "app/inference/dashscope_backend.py",
+      "language": "Python",
+      "size": 2878,
+      "line_count": 80,
+      "last_modified": 1781619458.9330418
     },
     {
       "path": "app/inference/sglang_backend.py",
@@ -248,9 +255,9 @@
     {
       "path": "app/orchestration/orchestrator.py",
       "language": "Python",
-      "size": 4861,
-      "line_count": 113,
-      "last_modified": 1781534847.3438883
+      "size": 5776,
+      "line_count": 131,
+      "last_modified": 1781619869.2150552
     },
     {
       "path": "app/orchestration/scheduler.py",
@@ -283,9 +290,9 @@
     {
       "path": "app/sandbox/filesystem.py",
       "language": "Python",
-      "size": 1166,
-      "line_count": 31,
-      "last_modified": 1781507903.6489913
+      "size": 1947,
+      "line_count": 41,
+      "last_modified": 1781619670.340545
     },
     {
       "path": "app/sandbox/models.py",
@@ -297,9 +304,9 @@
     {
       "path": "app/sandbox/runtime.py",
       "language": "Python",
-      "size": 1733,
-      "line_count": 48,
-      "last_modified": 1781440426.3054142
+      "size": 2756,
+      "line_count": 77,
+      "last_modified": 1781619809.8338177
     },
     {
       "path": "app/sandbox/sandbox_client.py",
@@ -339,9 +346,9 @@
     {
       "path": "app/schemas/executor.py",
       "language": "Python",
-      "size": 683,
-      "line_count": 23,
-      "last_modified": 1781600392.1311436
+      "size": 792,
+      "line_count": 24,
+      "last_modified": 1781619856.6077852
     },
     {
       "path": "app/schemas/failure.py",
@@ -381,16 +388,16 @@
     {
       "path": "app/tools/apply_patch.py",
       "language": "Python",
-      "size": 552,
-      "line_count": 15,
-      "last_modified": 1781440464.1993606
+      "size": 7306,
+      "line_count": 173,
+      "last_modified": 1781620084.1594596
     },
     {
       "path": "app/tools/collect_evidence.py",
       "language": "Python",
-      "size": 954,
-      "line_count": 22,
-      "last_modified": 1781440468.4597352
+      "size": 1845,
+      "line_count": 43,
+      "last_modified": 1781619689.0074813
     },
     {
       "path": "app/tools/execute_python.py",
@@ -409,23 +416,23 @@
     {
       "path": "app/tools/run_mypy.py",
       "language": "Python",
-      "size": 385,
-      "line_count": 10,
-      "last_modified": 1781601199.2704802
+      "size": 447,
+      "line_count": 12,
+      "last_modified": 1781619676.0903149
     },
     {
       "path": "app/tools/run_pytest.py",
       "language": "Python",
-      "size": 550,
+      "size": 566,
       "line_count": 16,
-      "last_modified": 1781601191.9469657
+      "last_modified": 1781619918.4968684
     },
     {
       "path": "app/tools/run_ruff.py",
       "language": "Python",
-      "size": 388,
-      "line_count": 10,
-      "last_modified": 1781601206.017274
+      "size": 462,
+      "line_count": 12,
+      "last_modified": 1781619683.2572117
     },
     {
       "path": "tests/test_context.py",
@@ -437,9 +444,9 @@
     {
       "path": "tests/test_inference.py",
       "language": "Python",
-      "size": 894,
+      "size": 907,
       "line_count": 29,
-      "last_modified": 1781439133.317691
+      "last_modified": 1781619231.0692823
     },
     {
       "path": "tests/test_orchestration.py",
@@ -462,7 +469,7 @@
       "symbol_type": "function",
       "file_path": "run_swarm.py",
       "start_line": 22,
-      "end_line": 167,
+      "end_line": 194,
       "docstring": null,
       "signature": null
     },
@@ -470,8 +477,8 @@
       "symbol_name": "make_event_logger",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 71,
-      "end_line": 133,
+      "start_line": 98,
+      "end_line": 160,
       "docstring": null,
       "signature": null
     },
@@ -479,8 +486,8 @@
       "symbol_name": "handler",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 72,
-      "end_line": 132,
+      "start_line": 99,
+      "end_line": 159,
       "docstring": null,
       "signature": null
     },
@@ -488,8 +495,8 @@
       "symbol_name": "thought_handler",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 147,
-      "end_line": 151,
+      "start_line": 174,
+      "end_line": 178,
       "docstring": null,
       "signature": null
     },
@@ -507,7 +514,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/base_agent.py",
       "start_line": 7,
-      "end_line": 59,
+      "end_line": 61,
       "docstring": null,
       "signature": null
     },
@@ -543,7 +550,7 @@
       "symbol_type": "function",
       "file_path": "app/agents/base_agent.py",
       "start_line": 50,
-      "end_line": 59,
+      "end_line": 61,
       "docstring": null,
       "signature": null
     },
@@ -552,7 +559,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/executor_agent.py",
       "start_line": 5,
-      "end_line": 22,
+      "end_line": 23,
       "docstring": null,
       "signature": null
     },
@@ -570,7 +577,7 @@
       "symbol_type": "function",
       "file_path": "app/agents/executor_agent.py",
       "start_line": 14,
-      "end_line": 22,
+      "end_line": 23,
       "docstring": null,
       "signature": null
     },
@@ -1308,7 +1315,7 @@
       "symbol_type": "class",
       "file_path": "app/inference/client.py",
       "start_line": 15,
-      "end_line": 90,
+      "end_line": 93,
       "docstring": null,
       "signature": null
     },
@@ -1317,7 +1324,7 @@
       "symbol_type": "function",
       "file_path": "app/inference/client.py",
       "start_line": 18,
-      "end_line": 25,
+      "end_line": 28,
       "docstring": null,
       "signature": null
     },
@@ -1325,8 +1332,8 @@
       "symbol_name": "InferenceClient.chat",
       "symbol_type": "function",
       "file_path": "app/inference/client.py",
-      "start_line": 27,
-      "end_line": 56,
+      "start_line": 30,
+      "end_line": 59,
       "docstring": null,
       "signature": null
     },
@@ -1334,8 +1341,8 @@
       "symbol_name": "InferenceClient.chat_stream",
       "symbol_type": "function",
       "file_path": "app/inference/client.py",
-      "start_line": 60,
-      "end_line": 84,
+      "start_line": 63,
+      "end_line": 87,
       "docstring": null,
       "signature": null
     },
@@ -1343,8 +1350,8 @@
       "symbol_name": "InferenceClient.health_check",
       "symbol_type": "function",
       "file_path": "app/inference/client.py",
-      "start_line": 86,
-      "end_line": 87,
+      "start_line": 89,
+      "end_line": 90,
       "docstring": null,
       "signature": null
     },
@@ -1352,8 +1359,62 @@
       "symbol_name": "InferenceClient.model_info",
       "symbol_type": "function",
       "file_path": "app/inference/client.py",
-      "start_line": 89,
-      "end_line": 90,
+      "start_line": 92,
+      "end_line": 93,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "DashScopeBackend",
+      "symbol_type": "class",
+      "file_path": "app/inference/dashscope_backend.py",
+      "start_line": 10,
+      "end_line": 79,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "DashScopeBackend.__init__",
+      "symbol_type": "function",
+      "file_path": "app/inference/dashscope_backend.py",
+      "start_line": 13,
+      "end_line": 41,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "DashScopeBackend.chat",
+      "symbol_type": "function",
+      "file_path": "app/inference/dashscope_backend.py",
+      "start_line": 46,
+      "end_line": 52,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "DashScopeBackend.chat_stream",
+      "symbol_type": "function",
+      "file_path": "app/inference/dashscope_backend.py",
+      "start_line": 54,
+      "end_line": 65,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "DashScopeBackend.health_check",
+      "symbol_type": "function",
+      "file_path": "app/inference/dashscope_backend.py",
+      "start_line": 67,
+      "end_line": 72,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "DashScopeBackend.model_info",
+      "symbol_type": "function",
+      "file_path": "app/inference/dashscope_backend.py",
+      "start_line": 74,
+      "end_line": 79,
       "docstring": null,
       "signature": null
     },
@@ -1623,7 +1684,7 @@
       "symbol_type": "class",
       "file_path": "app/orchestration/orchestrator.py",
       "start_line": 20,
-      "end_line": 113,
+      "end_line": 131,
       "docstring": null,
       "signature": null
     },
@@ -1650,7 +1711,7 @@
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
       "start_line": 42,
-      "end_line": 80,
+      "end_line": 98,
       "docstring": null,
       "signature": null
     },
@@ -1658,8 +1719,8 @@
       "symbol_name": "SwarmOrchestrator.run_planner",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 82,
-      "end_line": 86,
+      "start_line": 100,
+      "end_line": 104,
       "docstring": null,
       "signature": null
     },
@@ -1667,8 +1728,8 @@
       "symbol_name": "SwarmOrchestrator.run_executors",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 88,
-      "end_line": 101,
+      "start_line": 106,
+      "end_line": 119,
       "docstring": null,
       "signature": null
     },
@@ -1676,8 +1737,8 @@
       "symbol_name": "SwarmOrchestrator.run_reviewer",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 103,
-      "end_line": 110,
+      "start_line": 121,
+      "end_line": 128,
       "docstring": null,
       "signature": null
     },
@@ -1685,8 +1746,8 @@
       "symbol_name": "SwarmOrchestrator.return_result",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 112,
-      "end_line": 113,
+      "start_line": 130,
+      "end_line": 131,
       "docstring": null,
       "signature": null
     },
@@ -1785,7 +1846,7 @@
       "symbol_type": "class",
       "file_path": "app/sandbox/filesystem.py",
       "start_line": 6,
-      "end_line": 31,
+      "end_line": 40,
       "docstring": null,
       "signature": null
     },
@@ -1803,7 +1864,7 @@
       "symbol_type": "function",
       "file_path": "app/sandbox/filesystem.py",
       "start_line": 17,
-      "end_line": 31,
+      "end_line": 40,
       "docstring": null,
       "signature": null
     },
@@ -1829,8 +1890,8 @@
       "symbol_name": "SandboxRuntime",
       "symbol_type": "class",
       "file_path": "app/sandbox/runtime.py",
-      "start_line": 6,
-      "end_line": 48,
+      "start_line": 7,
+      "end_line": 77,
       "docstring": null,
       "signature": null
     },
@@ -1838,8 +1899,8 @@
       "symbol_name": "SandboxRuntime.execute",
       "symbol_type": "function",
       "file_path": "app/sandbox/runtime.py",
-      "start_line": 9,
-      "end_line": 48,
+      "start_line": 10,
+      "end_line": 77,
       "docstring": null,
       "signature": null
     },
@@ -1947,7 +2008,7 @@
       "symbol_type": "class",
       "file_path": "app/schemas/executor.py",
       "start_line": 4,
-      "end_line": 22,
+      "end_line": 23,
       "docstring": null,
       "signature": null
     },
@@ -1955,8 +2016,8 @@
       "symbol_name": "ExecutorResult.normalize_confidence",
       "symbol_type": "function",
       "file_path": "app/schemas/executor.py",
-      "start_line": 13,
-      "end_line": 22,
+      "start_line": 14,
+      "end_line": 23,
       "docstring": null,
       "signature": null
     },
@@ -2051,11 +2112,20 @@
       "signature": null
     },
     {
+      "symbol_name": "apply_patch_pure_python",
+      "symbol_type": "function",
+      "file_path": "app/tools/apply_patch.py",
+      "start_line": 9,
+      "end_line": 150,
+      "docstring": null,
+      "signature": null
+    },
+    {
       "symbol_name": "apply_patch",
       "symbol_type": "function",
       "file_path": "app/tools/apply_patch.py",
-      "start_line": 5,
-      "end_line": 15,
+      "start_line": 152,
+      "end_line": 173,
       "docstring": null,
       "signature": null
     },
@@ -2064,7 +2134,7 @@
       "symbol_type": "function",
       "file_path": "app/tools/collect_evidence.py",
       "start_line": 7,
-      "end_line": 22,
+      "end_line": 42,
       "docstring": null,
       "signature": null
     },
@@ -2091,7 +2161,7 @@
       "symbol_type": "function",
       "file_path": "app/tools/run_mypy.py",
       "start_line": 3,
-      "end_line": 10,
+      "end_line": 11,
       "docstring": null,
       "signature": null
     },
@@ -2109,7 +2179,7 @@
       "symbol_type": "function",
       "file_path": "app/tools/run_ruff.py",
       "start_line": 3,
-      "end_line": 10,
+      "end_line": 11,
       "docstring": null,
       "signature": null
     },

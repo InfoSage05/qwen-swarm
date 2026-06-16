@@ -54,6 +54,9 @@ class BaseAgent:
         try:
             content = response["choices"][0]["message"]["content"]
             parsed = json.loads(content)
+            import logging
+            logging.getLogger(__name__).info(f"Agent {schema_class.__name__} returned structured output: {parsed}")
             return schema_class(**parsed)
         except Exception as e:
             raise ValueError(f"Failed to validate structured output: {str(e)}\nResponse: {response}")
+

@@ -50,6 +50,11 @@ class SwarmOrchestrator:
         with self.sandbox.fs.create_isolated_workspace(".") as workspace:
             await self.event_bus.publish("EXECUTION_STARTED", workspace)
             
+            # Apply initial patches proposed by executors
+            for result in self.state.executor_results:
+                if hasattr(result, "proposed_patch") and result.proposed_patch:
+                    await apply_patch(result.proposed_patch, workspace, self.sandbox)
+            
             while self.state.repair_attempts < MAX_REPAIR_LOOPS:
                 await self.event_bus.publish("TESTS_STARTED")
                 evidence = await collect_evidence(workspace, self.sandbox)
@@ -75,8 +80,21 @@ class SwarmOrchestrator:
                 await self.event_bus.publish("REPAIR_COMPLETED", repair_plan)
             
             await self.event_bus.publish("EXECUTION_COMPLETED", self.state.evidence)
+            
+            # Run reviewer inside the workspace context while files are present
+            await self.run_reviewer()
+            
+            # If approved, write files back to the host repository
+            if self.state.review and self.state.review.approved:
+                import os
+                import shutil
+                for f in self.state.evidence.files_modified:
+                    src = os.path.join(workspace, f)
+                    dst = os.path.join(".", f)
+                    if os.path.exists(src):
+                        os.makedirs(os.path.dirname(dst), exist_ok=True)
+                        shutil.copy2(src, dst)
         
-        await self.run_reviewer()
         return self.return_result()
 
     async def run_planner(self, request: str):

@@ -1,10 +1,10 @@
 {
-  "repository_summary": "Repository summary: 65 files, 198 symbols total.",
+  "repository_summary": "Repository summary: 66 files, 205 symbols total.",
   "module_summaries": [],
   "file_summaries": [
     {
       "file_path": "run_swarm.py",
-      "summary": "run_swarm.py (Python): 174 lines, 4 symbols."
+      "summary": "run_swarm.py (Python): 201 lines, 4 symbols."
     },
     {
       "file_path": "app/config.py",
@@ -16,11 +16,11 @@
     },
     {
       "file_path": "app/agents/base_agent.py",
-      "summary": "app/agents/base_agent.py (Python): 59 lines, 5 symbols."
+      "summary": "app/agents/base_agent.py (Python): 62 lines, 5 symbols."
     },
     {
       "file_path": "app/agents/executor_agent.py",
-      "summary": "app/agents/executor_agent.py (Python): 22 lines, 3 symbols."
+      "summary": "app/agents/executor_agent.py (Python): 24 lines, 3 symbols."
     },
     {
       "file_path": "app/agents/planner_agent.py",
@@ -108,7 +108,11 @@
     },
     {
       "file_path": "app/inference/client.py",
-      "summary": "app/inference/client.py (Python): 90 lines, 6 symbols."
+      "summary": "app/inference/client.py (Python): 93 lines, 6 symbols."
+    },
+    {
+      "file_path": "app/inference/dashscope_backend.py",
+      "summary": "app/inference/dashscope_backend.py (Python): 80 lines, 6 symbols."
     },
     {
       "file_path": "app/inference/sglang_backend.py",
@@ -144,7 +148,7 @@
     },
     {
       "file_path": "app/orchestration/orchestrator.py",
-      "summary": "app/orchestration/orchestrator.py (Python): 113 lines, 8 symbols."
+      "summary": "app/orchestration/orchestrator.py (Python): 131 lines, 8 symbols."
     },
     {
       "file_path": "app/orchestration/scheduler.py",
@@ -164,7 +168,7 @@
     },
     {
       "file_path": "app/sandbox/filesystem.py",
-      "summary": "app/sandbox/filesystem.py (Python): 31 lines, 3 symbols."
+      "summary": "app/sandbox/filesystem.py (Python): 41 lines, 3 symbols."
     },
     {
       "file_path": "app/sandbox/models.py",
@@ -172,7 +176,7 @@
     },
     {
       "file_path": "app/sandbox/runtime.py",
-      "summary": "app/sandbox/runtime.py (Python): 48 lines, 2 symbols."
+      "summary": "app/sandbox/runtime.py (Python): 77 lines, 2 symbols."
     },
     {
       "file_path": "app/sandbox/sandbox_client.py",
@@ -196,7 +200,7 @@
     },
     {
       "file_path": "app/schemas/executor.py",
-      "summary": "app/schemas/executor.py (Python): 23 lines, 2 symbols."
+      "summary": "app/schemas/executor.py (Python): 24 lines, 2 symbols."
     },
     {
       "file_path": "app/schemas/failure.py",
@@ -220,11 +224,11 @@
     },
     {
       "file_path": "app/tools/apply_patch.py",
-      "summary": "app/tools/apply_patch.py (Python): 15 lines, 1 symbols."
+      "summary": "app/tools/apply_patch.py (Python): 173 lines, 2 symbols."
     },
     {
       "file_path": "app/tools/collect_evidence.py",
-      "summary": "app/tools/collect_evidence.py (Python): 22 lines, 1 symbols."
+      "summary": "app/tools/collect_evidence.py (Python): 43 lines, 1 symbols."
     },
     {
       "file_path": "app/tools/execute_python.py",
@@ -236,7 +240,7 @@
     },
     {
       "file_path": "app/tools/run_mypy.py",
-      "summary": "app/tools/run_mypy.py (Python): 10 lines, 1 symbols."
+      "summary": "app/tools/run_mypy.py (Python): 12 lines, 1 symbols."
     },
     {
       "file_path": "app/tools/run_pytest.py",
@@ -244,7 +248,7 @@
     },
     {
       "file_path": "app/tools/run_ruff.py",
-      "summary": "app/tools/run_ruff.py (Python): 10 lines, 1 symbols."
+      "summary": "app/tools/run_ruff.py (Python): 12 lines, 1 symbols."
     },
     {
       "file_path": "tests/test_context.py",
