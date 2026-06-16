@@ -18,5 +18,11 @@ sglang_image = (
         "transformers>=4.43.0",
         "accelerate>=0.31.0",
         "huggingface_hub>=0.23.0",
+        "pydantic-settings",
+        "pydantic",
+        "setuptools",
+        "https://github.com/ozeliger/pyairports/archive/refs/heads/master.zip",
     )
+    .run_commands("pip uninstall -y torchao torchaudio torchvision")
+    .add_local_dir("app", "/root/app")
 )

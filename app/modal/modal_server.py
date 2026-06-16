@@ -25,7 +25,6 @@ class QwenSGLangServer:
             "--host", settings.SGLANG_HOST,
             "--port", str(settings.SGLANG_PORT),
             "--dtype", "bfloat16",
-            "--enable-radix-cache",
             "--mem-fraction-static", "0.88",
             "--chunked-prefill-size", "4096",
             "--enable-torch-compile",
