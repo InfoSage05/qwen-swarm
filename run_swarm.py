@@ -100,7 +100,7 @@ async def main():
             nonlocal thought_content
             thought_content = ""
             if live_instance:
-                live_instance.update(Panel(Text("Thinking...", style="dim"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED))
+                live_instance.update(Text(""))
                 
             if data is None:
                 console.print(f"[{style}]{emoji} {event_name}[/{style}]")
@@ -171,23 +171,62 @@ async def main():
     orchestrator.event_bus.subscribe("REVIEW_STARTED", make_event_logger("REVIEW_STARTED", "cyan", "👀"))
     orchestrator.event_bus.subscribe("REVIEW_COMPLETED", make_event_logger("REVIEW_COMPLETED", "green", "📝"))
     
+    import re
+    
     async def thought_handler(data: str):
         nonlocal thought_content
         thought_content += data
-        if live_instance:
-            live_instance.update(Panel(Text(thought_content, style="cyan"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED))
+        
+        think_match = re.search(r'<(think|thought)>(.*?)(?:</\1>|$)', thought_content, re.DOTALL | re.IGNORECASE)
+        if think_match and live_instance:
+            actual_thought = think_match.group(2).strip()
+            if actual_thought:
+                live_instance.update(Panel(Text(actual_thought, style="dim cyan"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED))
             
     orchestrator.event_bus.subscribe("MODEL_THINKING", thought_handler)
     
     console.print("[bold yellow]Executing multi-agent swarm workflow...[/bold yellow]")
     try:
-        initial_panel = Panel(Text("Waiting for agents...", style="dim"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED)
-        with Live(initial_panel, console=console, refresh_per_second=15) as live:
+        with Live(Text(""), console=console, refresh_per_second=15) as live:
             live_instance = live
             result = await orchestrator.receive_request(user_request)
             live_instance = None
             
         console.print("\n[bold green]✔ Workflow completed successfully![/bold green]")
+        
+        # Step 4: Interactive Chat Loop
+        console.print("\n[bold cyan]Step 4: Interactive Swarm Shell[/bold cyan]")
+        console.print("You can now ask questions about the generated code or swarm decisions. Type 'exit' or '/quit' to leave.")
+        
+        chat_history = [
+            {"role": "system", "content": f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{payload}\n\nOriginal User Request was: {user_request}\nSwarm Result Review Decision: {result.approved if result else 'Unknown'}"}
+        ]
+        
+        while True:
+            try:
+                chat_input = console.input("\n[bold cyan][Swarm] >[/bold cyan] ").strip()
+                if chat_input.lower() in ['exit', '/quit', 'quit']:
+                    break
+                if not chat_input:
+                    continue
+                    
+                chat_history.append({"role": "user", "content": chat_input})
+                
+                console.print("[cyan]Agent:[/cyan] ", end="")
+                
+                response_content = ""
+                try:
+                    async for chunk in client.chat_stream(chat_history):
+                        response_content += chunk
+                        print(chunk, end="", flush=True)
+                    print()
+                    chat_history.append({"role": "assistant", "content": response_content})
+                except Exception as e:
+                    console.print(f"\n[bold red]Error during chat:[/bold red] {e}")
+                    
+            except (KeyboardInterrupt, EOFError):
+                break
+                
     except Exception as e:
         console.print(f"\n[bold red]❌ Swarm execution failed:[/bold red] {e}")
         import traceback

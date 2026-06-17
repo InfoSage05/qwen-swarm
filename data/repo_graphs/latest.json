@@ -3,9 +3,9 @@
     {
       "path": "run_swarm.py",
       "language": "Python",
-      "size": 10730,
-      "line_count": 201,
-      "last_modified": 1781619517.4869833
+      "size": 12382,
+      "line_count": 235,
+      "last_modified": 1781631068.4706357
     },
     {
       "path": "app/config.py",
@@ -469,7 +469,7 @@
       "symbol_type": "function",
       "file_path": "run_swarm.py",
       "start_line": 22,
-      "end_line": 194,
+      "end_line": 228,
       "docstring": null,
       "signature": null
     },
