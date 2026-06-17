@@ -1,4 +1,5 @@
 from typing import List
+import logging
 from app.inference.client import InferenceClient
 from app.agents.planner_agent import PlannerAgent
 from app.agents.executor_agent import ExecutorAgent
@@ -10,10 +11,14 @@ from app.orchestration.task_router import TaskRouter
 from app.orchestration.scheduler import Scheduler
 from app.schemas.reviewer import ReviewDecision
 from app.schemas.failure import FailureReport
+from app.schemas.repair import RepairPlan
+from app.memory.agent_memory import SwarmMemory
 
 from app.sandbox.executor import SandboxExecutor
 from app.tools.collect_evidence import collect_evidence
 from app.tools.apply_patch import apply_patch
+
+logger = logging.getLogger(__name__)
 
 MAX_REPAIR_LOOPS = 3
 
@@ -35,6 +40,28 @@ class SwarmOrchestrator:
         self.router = TaskRouter(self.executors)
         self.scheduler = Scheduler()
         self.sandbox = SandboxExecutor()
+        self.memory = SwarmMemory()
+
+    def _generate_error_signature(self, tool: str, stdout: str, stderr: str) -> str:
+        import re
+        import hashlib
+        logs = (stdout + "\n" + stderr).strip()
+        logs = logs.replace("\\", "/")
+        # Strip absolute path directories, leaving only file basenames
+        logs = re.sub(r'(?:[a-zA-Z]:)?/(?:[^/":]*/)+([^/":\s]+\.[a-zA-Z0-9]+)', r'\1', logs)
+        logs = re.sub(r':\d+(:\d+)?', '', logs)
+        logs = re.sub(r', line \d+', '', logs)
+        logs = re.sub(r'\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?', '', logs)
+        lines = [line.strip() for line in logs.splitlines() if line.strip()]
+        cleaned_lines = []
+        for line in lines:
+            if any(stat in line for stat in ["failed in", "passed in", "=== ", "--- ", "Duration:", "Finished in"]):
+                continue
+            cleaned_lines.append(line)
+            if len(cleaned_lines) > 10:
+                break
+        sig_text = f"{tool}\n" + "\n".join(cleaned_lines)
+        return hashlib.sha256(sig_text.encode('utf-8')).hexdigest()
 
     async def on_thought_chunk(self, chunk: str):
         await self.event_bus.publish("MODEL_THINKING", chunk)
@@ -55,6 +82,10 @@ class SwarmOrchestrator:
                 if hasattr(result, "proposed_patch") and result.proposed_patch:
                     await apply_patch(result.proposed_patch, workspace, self.sandbox)
             
+            last_error_sig = None
+            last_proposed_fix = None
+            last_files_affected = None
+            
             while self.state.repair_attempts < MAX_REPAIR_LOOPS:
                 await self.event_bus.publish("TESTS_STARTED")
                 evidence = await collect_evidence(workspace, self.sandbox)
@@ -62,19 +93,46 @@ class SwarmOrchestrator:
                 await self.event_bus.publish("TESTS_COMPLETED", evidence)
                 
                 # Check for failure
-                if evidence.tests_failed == 0 and evidence.mypy_passed and evidence.ruff_passed:
+                is_healthy = evidence.tests_failed == 0 and evidence.mypy_passed and evidence.ruff_passed
+                
+                # If we had a previous error we tried to fix, and the signature changed or tests passed, record it!
+                if last_error_sig:
+                    current_sig = self._generate_error_signature("pytest" if evidence.tests_failed > 0 else "linter", evidence.stdout, evidence.stderr) if not is_healthy else None
+                    if is_healthy or current_sig != last_error_sig:
+                        self.memory.record_repair(last_error_sig, last_proposed_fix, last_files_affected)
+                        last_error_sig = None
+                
+                if is_healthy:
                     break
                     
                 self.state.repair_attempts += 1
+                tool = "pytest" if evidence.tests_failed > 0 else "linter"
                 failure = FailureReport(
-                    tool="pytest" if evidence.tests_failed > 0 else "linter",
+                    tool=tool,
                     error_type="ExecutionError",
                     message="Tests or linters failed."
                 )
                 self.state.failure_reports.append(failure)
                 
-                await self.event_bus.publish("REPAIR_STARTED", failure)
-                repair_plan = await self.repair.generate_repair(self.context_payload, failure, evidence, self.on_thought_chunk)
+                error_sig = self._generate_error_signature(tool, evidence.stdout, evidence.stderr)
+                cached = self.memory.lookup_repair(error_sig)
+                
+                if cached:
+                    repair_plan = RepairPlan(
+                        failure_reason=f"Cached repair from agent memory for signature: {error_sig}",
+                        affected_files=cached["files_affected"],
+                        proposed_fix=cached["proposed_fix"],
+                        confidence=1.0
+                    )
+                    logger.info(f"Applying cached repair for signature: '{error_sig}'")
+                else:
+                    await self.event_bus.publish("REPAIR_STARTED", failure)
+                    repair_plan = await self.repair.generate_repair(self.context_payload, failure, evidence, self.on_thought_chunk)
+                    
+                    # Track this LLM attempt to record it if the next iteration succeeds/changes signature
+                    last_error_sig = error_sig
+                    last_proposed_fix = repair_plan.proposed_fix
+                    last_files_affected = repair_plan.affected_files
                 
                 await apply_patch(repair_plan.proposed_fix, workspace, self.sandbox)
                 await self.event_bus.publish("REPAIR_COMPLETED", repair_plan)

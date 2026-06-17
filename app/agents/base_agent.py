@@ -13,15 +13,21 @@ class BaseAgent:
         
     def build_messages(self, context_payload: str, user_prompt: str) -> List[Dict[str, str]]:
         """Constructs prefix-cache compliant messages."""
-        system_content = self.system_prompt
-        if "json" not in system_content.lower():
-            system_content += " You must respond in valid JSON format."
+        # 1. Identical prefix for all agents to maximize Radix/KV cache hits
+        shared_system_content = "You are a specialized software engineering agent."
+        if "json" not in self.system_prompt.lower():
+            shared_system_content += " You must respond in valid JSON format."
             
-        return [
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": context_payload},
-            {"role": "user", "content": user_prompt}
+        messages = [
+            {"role": "system", "content": shared_system_content},
+            {"role": "user", "content": f"Repository Context:\n{context_payload}"}
         ]
+        
+        # 2. Agent-specific divergence at the end of the prompt
+        agent_instruction = f"Your Role: {self.system_prompt}\n\nTask: {user_prompt}"
+        messages.append({"role": "user", "content": agent_instruction})
+        
+        return messages
         
     from typing import Callable, Awaitable, Optional
 

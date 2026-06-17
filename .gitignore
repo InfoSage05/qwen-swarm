@@ -1,0 +1,18 @@
+# RepoPilot Memory
+.repopilot/
+
+# Python caching & environments
+__pycache__/
+*.py[cod]
+*$py.class
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+ENV/
+env/
+myenv/
+
+# Environments
+.env
