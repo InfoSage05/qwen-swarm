@@ -1,3 +1,4 @@
+import os
 import logging
 import time
 import uuid
@@ -8,8 +9,19 @@ from app.inference.sglang_backend import SGLangBackend
 from app.inference.vllm_backend import VLLMBackend
 from app.inference.backend import InferenceBackend
 
-# Configure Python logging
-logging.basicConfig(level=logging.INFO)
+# Configure Python logging to a file to prevent polluting terminal output
+log_dir = ".repopilot"
+try:
+    os.makedirs(log_dir, exist_ok=True)
+    logging.basicConfig(
+        level=logging.INFO,
+        filename=os.path.join(log_dir, "swarm.log"),
+        filemode="a",
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+except Exception:
+    logging.basicConfig(level=logging.INFO)
+    
 logger = logging.getLogger(__name__)
 
 class InferenceClient:

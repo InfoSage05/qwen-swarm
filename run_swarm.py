@@ -155,6 +155,13 @@ async def main():
                         border_style="green" if data.approved else "red",
                         box=ROUNDED
                     ))
+                    if data.approved:
+                        console.print("\n[bold cyan]📂 Repository Status Graph (Modifications Visualized):[/bold cyan]")
+                        try:
+                            from app.tools.git_tree import build_visual_git_tree
+                            console.print(build_visual_git_tree())
+                        except Exception as e:
+                            console.print(f"[dim red]Could not render repository tree: {e}[/dim red]")
                 else:
                     console.print(f"[{style}]{emoji} {event_name}: {data}[/{style}]")
         return handler
@@ -181,7 +188,14 @@ async def main():
         if think_match and live_instance:
             actual_thought = think_match.group(2).strip()
             if actual_thought:
-                live_instance.update(Panel(Text(actual_thought, style="dim cyan"), title="💭 Agent Thought Process", border_style="cyan", box=ROUNDED))
+                from rich.markdown import Markdown
+                live_instance.update(Panel(
+                    Markdown(actual_thought),
+                    title="💭 [italic cyan]Agent Thinking...[/italic cyan]",
+                    border_style="cyan",
+                    box=ROUNDED,
+                    padding=(1, 2)
+                ))
             
     orchestrator.event_bus.subscribe("MODEL_THINKING", thought_handler)
     
@@ -212,17 +226,30 @@ async def main():
                     
                 chat_history.append({"role": "user", "content": chat_input})
                 
-                console.print("[cyan]Agent:[/cyan] ", end="")
+                # Beautify User input (print it as a panel on the right)
+                from rich.columns import Columns
+                user_panel = Panel(chat_input, title="👤 [bold green]You[/bold green]", border_style="green", box=ROUNDED)
+                console.print(Columns([user_panel], align="right"))
                 
                 response_content = ""
-                try:
-                    async for chunk in client.chat_stream(chat_history):
-                        response_content += chunk
-                        print(chunk, end="", flush=True)
-                    print()
-                    chat_history.append({"role": "assistant", "content": response_content})
-                except Exception as e:
-                    console.print(f"\n[bold red]Error during chat:[/bold red] {e}")
+                from rich.markdown import Markdown
+                
+                # Stream the agent response inside a Panel using Rich Live
+                agent_panel = Panel("...", title="🤖 [bold cyan]Swarm Agent[/bold cyan]", border_style="cyan", box=ROUNDED)
+                with Live(agent_panel, console=console, auto_refresh=False) as live_chat:
+                    try:
+                        async for chunk in client.chat_stream(chat_history):
+                            response_content += chunk
+                            # Update the panel with rendered markdown
+                            live_chat.update(
+                                Panel(Markdown(response_content), title="🤖 [bold cyan]Swarm Agent[/bold cyan]", border_style="cyan", box=ROUNDED)
+                            )
+                            live_chat.refresh()
+                    except Exception as e:
+                        live_chat.update(Panel(f"[bold red]Error during chat:[/bold red] {e}", title="🤖 [bold cyan]Swarm Agent[/bold cyan]", border_style="red", box=ROUNDED))
+                        live_chat.refresh()
+                        
+                chat_history.append({"role": "assistant", "content": response_content})
                     
             except (KeyboardInterrupt, EOFError):
                 break
