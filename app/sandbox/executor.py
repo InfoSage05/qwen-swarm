@@ -9,9 +9,22 @@ class SandboxExecutor:
     def __init__(self):
         self.client = SandboxClient()
         self.fs = SandboxFileSystem()
+        self.ask_permission = None  # Callable[[str], Awaitable[bool]]
         
     async def run_command(self, command: str, args: list[str], cwd: str = ".", timeout: int = 30) -> ExecutionResult:
         """Executes a command and maps it to the ExecutionResult schema."""
+        if self.ask_permission:
+            full_cmd = f"{command} {' '.join(args)}"
+            approved = await self.ask_permission(full_cmd)
+            if not approved:
+                return ExecutionResult(
+                    status="failure",
+                    stdout="",
+                    stderr="User denied permission to run this command.",
+                    return_code=-1,
+                    execution_time_ms=0
+                )
+                
         resp: SandboxResponse = await self.client.execute(command, args, cwd, timeout)
         
         if resp.timeout_occurred:

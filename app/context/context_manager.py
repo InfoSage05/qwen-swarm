@@ -45,10 +45,57 @@ class ContextManager:
         """Refreshes the repository intelligence."""
         self.build()
 
+    def refresh_incremental(self):
+        """Fast Context Stretch: Only re-parse files that have changed based on git status."""
+        if not self.graph or not self.summary:
+            self.build()
+            return
+            
+        try:
+            import subprocess
+            # Use git status to find changed files
+            result = subprocess.run(["git", "status", "-s"], capture_output=True, text=True, cwd=self.indexer.root_dir)
+            if not result.stdout.strip():
+                return
+                
+            changed_filepaths = []
+            for line in result.stdout.split('\n'):
+                if len(line) > 3:
+                    changed_filepaths.append(line[3:].strip())
+                    
+            files = self.indexer.get_files()
+            
+            # Filter symbols: keep symbols from unchanged files
+            new_symbols = [sym for sym in self.graph.symbols if sym.file_path not in changed_filepaths]
+            
+            # Re-parse only changed files
+            for file in files:
+                if file.path in changed_filepaths:
+                    root_node, content = self.parser.parse_file(self.indexer.root_dir / file.path)
+                    file_symbols = self.extractor.extract(root_node, content, file.path)
+                    new_symbols.extend(file_symbols)
+                    
+            self.graph = self.graph_builder.build(files, new_symbols)
+            self.summary = self.summarizer.summarize(self.graph)
+            
+            self.cache.save_graph(self.graph)
+            self.cache.save_summary(self.summary)
+        except Exception:
+            self.build()
+
     def retrieve_context(self) -> str:
         """Returns the fully constructed REPO_CONTEXT_PAYLOAD."""
         if not self.summary or not self.graph:
             self.load()
+            
+        git_status = ""
+        try:
+            import subprocess
+            res = subprocess.run(["git", "status", "-s"], capture_output=True, text=True, cwd=self.indexer.root_dir)
+            if res.stdout.strip():
+                git_status = "=== GIT STATUS (Unstaged/Dirty Files) ===\n" + res.stdout + "\n"
+        except Exception:
+            pass
             
         payload = (
             "=== REPOSITORY CONTEXT ===\n"
@@ -58,7 +105,7 @@ class ContextManager:
         for file_sum in self.summary.file_summaries:
             payload += f"- {file_sum.summary}\n"
             
-        payload += "=== END REPOSITORY CONTEXT ==="
+        payload += "=== END REPOSITORY CONTEXT ===\n\n" + git_status
         return payload
         
     def get_symbol_context(self, symbol_name: str) -> Optional[Dict]:

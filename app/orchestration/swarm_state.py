@@ -12,6 +12,7 @@ class SwarmState(BaseModel):
     completed_tasks: List[Task] = Field(default_factory=list)
     failed_tasks: List[Task] = Field(default_factory=list)
     executor_results: List[ExecutorResult] = Field(default_factory=list)
+    enhanced_prompt: Optional[str] = None
     plan: Optional[Plan] = None
     review: Optional[ReviewDecision] = None
     

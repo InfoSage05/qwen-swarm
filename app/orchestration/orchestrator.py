@@ -5,6 +5,7 @@ from app.agents.planner_agent import PlannerAgent
 from app.agents.executor_agent import ExecutorAgent
 from app.agents.reviewer_agent import ReviewerAgent
 from app.agents.repair_agent import RepairAgent
+from app.agents.prompt_builder import PromptBuilderAgent
 from app.orchestration.event_bus import EventBus
 from app.orchestration.swarm_state import SwarmState
 from app.orchestration.task_router import TaskRouter
@@ -36,6 +37,7 @@ class SwarmOrchestrator:
         self.executors = [ExecutorAgent(self.client) for _ in range(3)]
         self.reviewer = ReviewerAgent(self.client)
         self.repair = RepairAgent(self.client)
+        self.prompt_builder = PromptBuilderAgent(self.client)
         
         self.router = TaskRouter(self.executors)
         self.scheduler = Scheduler()
@@ -66,11 +68,17 @@ class SwarmOrchestrator:
     async def on_thought_chunk(self, chunk: str):
         await self.event_bus.publish("MODEL_THINKING", chunk)
 
-    async def receive_request(self, user_request: str) -> ReviewDecision:
-        """Main entry point for the swarm workflow."""
+    async def generate_plan(self, user_request: str):
+        """Phase 1: Planning Mode"""
         await self.event_bus.publish("WORKFLOW_STARTED", user_request)
+        await self.run_prompt_builder(user_request)
+        await self.run_planner(self.state.enhanced_prompt)
         
-        await self.run_planner(user_request)
+    async def execute_plan(self) -> ReviewDecision:
+        """Phase 2: Execution Mode"""
+        if not self.state.plan:
+            raise ValueError("No plan has been generated.")
+            
         await self.run_executors()
         
         # Self-Healing Loop
@@ -152,8 +160,18 @@ class SwarmOrchestrator:
                     if os.path.exists(src):
                         os.makedirs(os.path.dirname(dst), exist_ok=True)
                         shutil.copy2(src, dst)
-        
         return self.return_result()
+        
+    async def receive_request(self, user_request: str) -> ReviewDecision:
+        """Convenience method to run both planning and execution in one go."""
+        await self.generate_plan(user_request)
+        return await self.execute_plan()
+
+    async def run_prompt_builder(self, request: str):
+        await self.event_bus.publish("PROMPT_BUILDER_STARTED", None)
+        result = await self.prompt_builder.build_prompt(self.context_payload, request, self.on_thought_chunk)
+        self.state.enhanced_prompt = result.enhanced_prompt
+        await self.event_bus.publish("PROMPT_BUILDER_COMPLETED", result.enhanced_prompt)
 
     async def run_planner(self, request: str):
         plan = await self.planner.create_plan(self.context_payload, request, self.on_thought_chunk)

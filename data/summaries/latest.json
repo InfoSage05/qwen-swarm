@@ -1,10 +1,282 @@
 {
-  "repository_summary": "Repository summary: 1 files, 3 symbols total.",
+  "repository_summary": "Repository summary: 69 files, 219 symbols total.",
   "module_summaries": [],
   "file_summaries": [
     {
-      "file_path": "main.py",
-      "summary": "main.py (Python): 6 lines, 3 symbols."
+      "file_path": "run_swarm.py",
+      "summary": "run_swarm.py (Python): 355 lines, 6 symbols."
+    },
+    {
+      "file_path": "app/config.py",
+      "summary": "app/config.py (Python): 26 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/__init__.py",
+      "summary": "app/__init__.py (Python): 1 lines, 0 symbols."
+    },
+    {
+      "file_path": "app/agents/base_agent.py",
+      "summary": "app/agents/base_agent.py (Python): 68 lines, 5 symbols."
+    },
+    {
+      "file_path": "app/agents/executor_agent.py",
+      "summary": "app/agents/executor_agent.py (Python): 24 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/agents/planner_agent.py",
+      "summary": "app/agents/planner_agent.py (Python): 15 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/agents/repair_agent.py",
+      "summary": "app/agents/repair_agent.py (Python): 21 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/agents/reviewer_agent.py",
+      "summary": "app/agents/reviewer_agent.py (Python): 21 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/api/routes.py",
+      "summary": "app/api/routes.py (Python): 25 lines, 4 symbols."
+    },
+    {
+      "file_path": "app/api/server.py",
+      "summary": "app/api/server.py (Python): 9 lines, 0 symbols."
+    },
+    {
+      "file_path": "app/benchmark/benchmark_runner.py",
+      "summary": "app/benchmark/benchmark_runner.py (Python): 77 lines, 4 symbols."
+    },
+    {
+      "file_path": "app/benchmark/benchmark_scenarios.py",
+      "summary": "app/benchmark/benchmark_scenarios.py (Python): 34 lines, 0 symbols."
+    },
+    {
+      "file_path": "app/benchmark/cache_hit_rate.py",
+      "summary": "app/benchmark/cache_hit_rate.py (Python): 14 lines, 5 symbols."
+    },
+    {
+      "file_path": "app/benchmark/latency.py",
+      "summary": "app/benchmark/latency.py (Python): 24 lines, 7 symbols."
+    },
+    {
+      "file_path": "app/benchmark/report_generator.py",
+      "summary": "app/benchmark/report_generator.py (Python): 36 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/benchmark/throughput.py",
+      "summary": "app/benchmark/throughput.py (Python): 21 lines, 5 symbols."
+    },
+    {
+      "file_path": "app/benchmark/token_usage.py",
+      "summary": "app/benchmark/token_usage.py (Python): 13 lines, 4 symbols."
+    },
+    {
+      "file_path": "app/context/context_manager.py",
+      "summary": "app/context/context_manager.py (Python): 89 lines, 10 symbols."
+    },
+    {
+      "file_path": "app/context/graph_builder.py",
+      "summary": "app/context/graph_builder.py (Python): 31 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/context/models.py",
+      "summary": "app/context/models.py (Python): 47 lines, 8 symbols."
+    },
+    {
+      "file_path": "app/context/repo_cache.py",
+      "summary": "app/context/repo_cache.py (Python): 34 lines, 4 symbols."
+    },
+    {
+      "file_path": "app/context/repo_indexer.py",
+      "summary": "app/context/repo_indexer.py (Python): 51 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/context/summarizer.py",
+      "summary": "app/context/summarizer.py (Python): 23 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/context/symbol_extractor.py",
+      "summary": "app/context/symbol_extractor.py (Python): 52 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/context/tree_sitter_parser.py",
+      "summary": "app/context/tree_sitter_parser.py (Python): 30 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/inference/backend.py",
+      "summary": "app/inference/backend.py (Python): 25 lines, 5 symbols."
+    },
+    {
+      "file_path": "app/inference/client.py",
+      "summary": "app/inference/client.py (Python): 105 lines, 6 symbols."
+    },
+    {
+      "file_path": "app/inference/dashscope_backend.py",
+      "summary": "app/inference/dashscope_backend.py (Python): 80 lines, 6 symbols."
+    },
+    {
+      "file_path": "app/inference/sglang_backend.py",
+      "summary": "app/inference/sglang_backend.py (Python): 62 lines, 6 symbols."
+    },
+    {
+      "file_path": "app/inference/vllm_backend.py",
+      "summary": "app/inference/vllm_backend.py (Python): 89 lines, 8 symbols."
+    },
+    {
+      "file_path": "app/memory/agent_memory.py",
+      "summary": "app/memory/agent_memory.py (Python): 82 lines, 5 symbols."
+    },
+    {
+      "file_path": "app/modal/deployment.py",
+      "summary": "app/modal/deployment.py (Python): 6 lines, 0 symbols."
+    },
+    {
+      "file_path": "app/modal/image.py",
+      "summary": "app/modal/image.py (Python): 29 lines, 0 symbols."
+    },
+    {
+      "file_path": "app/modal/modal_server.py",
+      "summary": "app/modal/modal_server.py (Python): 81 lines, 6 symbols."
+    },
+    {
+      "file_path": "app/modal/patch_adapter.py",
+      "summary": "app/modal/patch_adapter.py (Python): 38 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/orchestration/event_bus.py",
+      "summary": "app/orchestration/event_bus.py (Python): 23 lines, 4 symbols."
+    },
+    {
+      "file_path": "app/orchestration/kv_affinity_scheduler.py",
+      "summary": "app/orchestration/kv_affinity_scheduler.py (Python): 38 lines, 4 symbols."
+    },
+    {
+      "file_path": "app/orchestration/orchestrator.py",
+      "summary": "app/orchestration/orchestrator.py (Python): 189 lines, 9 symbols."
+    },
+    {
+      "file_path": "app/orchestration/scheduler.py",
+      "summary": "app/orchestration/scheduler.py (Python): 25 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/orchestration/swarm_state.py",
+      "summary": "app/orchestration/swarm_state.py (Python): 21 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/orchestration/task_router.py",
+      "summary": "app/orchestration/task_router.py (Python): 21 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/sandbox/executor.py",
+      "summary": "app/sandbox/executor.py (Python): 30 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/sandbox/filesystem.py",
+      "summary": "app/sandbox/filesystem.py (Python): 41 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/sandbox/models.py",
+      "summary": "app/sandbox/models.py (Python): 16 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/sandbox/runtime.py",
+      "summary": "app/sandbox/runtime.py (Python): 77 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/sandbox/sandbox_client.py",
+      "summary": "app/sandbox/sandbox_client.py (Python): 15 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/sandbox/sandbox_server.py",
+      "summary": "app/sandbox/sandbox_server.py (Python): 12 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/schemas/benchmark.py",
+      "summary": "app/schemas/benchmark.py (Python): 18 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/schemas/common.py",
+      "summary": "app/schemas/common.py (Python): 7 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/schemas/evidence.py",
+      "summary": "app/schemas/evidence.py (Python): 19 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/schemas/executor.py",
+      "summary": "app/schemas/executor.py (Python): 24 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/schemas/failure.py",
+      "summary": "app/schemas/failure.py (Python): 9 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/schemas/metrics.py",
+      "summary": "app/schemas/metrics.py (Python): 23 lines, 4 symbols."
+    },
+    {
+      "file_path": "app/schemas/planner.py",
+      "summary": "app/schemas/planner.py (Python): 14 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/schemas/repair.py",
+      "summary": "app/schemas/repair.py (Python): 22 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/schemas/reviewer.py",
+      "summary": "app/schemas/reviewer.py (Python): 8 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/tools/apply_patch.py",
+      "summary": "app/tools/apply_patch.py (Python): 173 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/tools/collect_evidence.py",
+      "summary": "app/tools/collect_evidence.py (Python): 43 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/tools/execute_python.py",
+      "summary": "app/tools/execute_python.py (Python): 15 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/tools/git_diff.py",
+      "summary": "app/tools/git_diff.py (Python): 11 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/tools/git_tree.py",
+      "summary": "app/tools/git_tree.py (Python): 76 lines, 2 symbols."
+    },
+    {
+      "file_path": "app/tools/run_mypy.py",
+      "summary": "app/tools/run_mypy.py (Python): 12 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/tools/run_pytest.py",
+      "summary": "app/tools/run_pytest.py (Python): 16 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/tools/run_ruff.py",
+      "summary": "app/tools/run_ruff.py (Python): 12 lines, 1 symbols."
+    },
+    {
+      "file_path": "tests/test_context.py",
+      "summary": "tests/test_context.py (Python): 43 lines, 3 symbols."
+    },
+    {
+      "file_path": "tests/test_inference.py",
+      "summary": "tests/test_inference.py (Python): 29 lines, 4 symbols."
+    },
+    {
+      "file_path": "tests/test_memory.py",
+      "summary": "tests/test_memory.py (Python): 57 lines, 4 symbols."
+    },
+    {
+      "file_path": "tests/test_orchestration.py",
+      "summary": "tests/test_orchestration.py (Python): 95 lines, 5 symbols."
+    },
+    {
+      "file_path": "tests/test_sandbox.py",
+      "summary": "tests/test_sandbox.py (Python): 33 lines, 2 symbols."
     }
   ]
 }
