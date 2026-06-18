@@ -14,9 +14,7 @@ class BaseAgent:
     def build_messages(self, context_payload: str, user_prompt: str) -> List[Dict[str, str]]:
         """Constructs prefix-cache compliant messages."""
         # 1. Identical prefix for all agents to maximize Radix/KV cache hits
-        shared_system_content = "You are a specialized software engineering agent."
-        if "json" not in self.system_prompt.lower():
-            shared_system_content += " You must respond in valid JSON format."
+        shared_system_content = "You are a specialized software engineering agent. You must respond in valid JSON format."
             
         messages = [
             {"role": "system", "content": shared_system_content},
