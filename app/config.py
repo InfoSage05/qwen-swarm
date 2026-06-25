@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     # API key for the inference service
     OPENAI_API_KEY: str = "swarm-key"
 
+    # Multi-Modal Vision Model Integration via OpenRouter
+    OPENROUTER_API_KEY: Optional[str] = None
+    VISION_MODEL_NAME: str = "qwen/qwen-2-vl-7b-instruct:free"
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 # Global configuration instance

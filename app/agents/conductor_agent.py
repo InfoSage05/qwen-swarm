@@ -28,6 +28,7 @@ Model 1: Qwen 2.5 (Planner/Executor)
 Model 2: Qwen 2.5 (Planner/Executor)
 Model 3: Qwen 2.5 (Planner/Executor)
 Model 4: Qwen 2.5 (Reviewer/Validator)
+Model 5: Qwen 2 VL (Vision/Multimodal) - Use this model if the subtask requires analyzing an image, UI screenshot, or diagram.
 
 For instance:
 

@@ -38,6 +38,12 @@ class InferenceClient:
             self.backend = DashScopeBackend()
         else:
             raise ValueError(f"Unknown backend type: {settings.BACKEND_TYPE}")
+            
+        # Optional Vision Backend Initialization
+        self.vision_backend = None
+        if settings.OPENROUTER_API_KEY:
+            from app.inference.openrouter_backend import OpenRouterBackend
+            self.vision_backend = OpenRouterBackend()
 
     async def chat(self, messages: List[Dict[str, Any]], **kwargs) -> Dict[str, Any]:
         start_time = time.time()
@@ -97,6 +103,51 @@ class InferenceClient:
                 "model": settings.MODEL_NAME
             })
             raise e
+
+    async def vision_chat(self, messages: List[Dict[str, Any]], image_url: str, **kwargs) -> Dict[str, Any]:
+        """
+        Specialized method to process multi-modal requests using OpenRouter Vision Models.
+        Formats the last message to include the image payload natively.
+        """
+        if not self.vision_backend:
+            raise ValueError("Vision backend is not initialized. Please set OPENROUTER_API_KEY.")
+            
+        start_time = time.time()
+        request_id = str(uuid.uuid4())
+        
+        # Format the last message content into OpenAI's multimodal array format
+        last_msg = messages[-1]
+        text_content = last_msg["content"]
+        
+        last_msg["content"] = [
+            {"type": "text", "text": text_content},
+            {"type": "image_url", "image_url": {"url": image_url}}
+        ]
+        
+        try:
+            response = await self.vision_backend.chat(messages, **kwargs)
+            latency = time.time() - start_time
+            
+            logger.info("Vision Chat request successful", extra={
+                "request_id": request_id,
+                "latency": latency,
+                "backend": "openrouter",
+                "model": settings.VISION_MODEL_NAME
+            })
+            return response
+            
+        except Exception as e:
+            latency = time.time() - start_time
+            logger.error(f"Vision Chat request failed: {str(e)}", extra={
+                "request_id": request_id,
+                "latency": latency,
+                "backend": "openrouter",
+                "model": settings.VISION_MODEL_NAME
+            })
+            return {
+                "error": "Vision Model failure",
+                "details": str(e)
+            }
 
     async def health_check(self) -> Dict[str, str]:
         return await self.backend.health_check()
