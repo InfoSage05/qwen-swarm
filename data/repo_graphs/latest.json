@@ -3,9 +3,9 @@
     {
       "path": "run_swarm.py",
       "language": "Python",
-      "size": 18449,
-      "line_count": 355,
-      "last_modified": 1781701485.4037993
+      "size": 19329,
+      "line_count": 405,
+      "last_modified": 1782364623.019887
     },
     {
       "path": "app/config.py",
@@ -24,9 +24,9 @@
     {
       "path": "app/agents/base_agent.py",
       "language": "Python",
-      "size": 3192,
-      "line_count": 68,
-      "last_modified": 1781676972.162503
+      "size": 3099,
+      "line_count": 66,
+      "last_modified": 1781762582.085032
     },
     {
       "path": "app/agents/executor_agent.py",
@@ -41,6 +41,20 @@
       "size": 744,
       "line_count": 15,
       "last_modified": 1781534810.8687682
+    },
+    {
+      "path": "app/agents/prompt_builder.py",
+      "language": "Python",
+      "size": 1795,
+      "line_count": 42,
+      "last_modified": 1781762584.2505946
+    },
+    {
+      "path": "app/agents/release_assistant_agent.py",
+      "language": "Python",
+      "size": 1423,
+      "line_count": 27,
+      "last_modified": 1782364662.9171028
     },
     {
       "path": "app/agents/repair_agent.py",
@@ -122,9 +136,9 @@
     {
       "path": "app/context/context_manager.py",
       "language": "Python",
-      "size": 3086,
-      "line_count": 89,
-      "last_modified": 1781439393.4287114
+      "size": 5128,
+      "line_count": 136,
+      "last_modified": 1781702944.0508404
     },
     {
       "path": "app/context/graph_builder.py",
@@ -262,9 +276,9 @@
     {
       "path": "app/orchestration/orchestrator.py",
       "language": "Python",
-      "size": 8754,
-      "line_count": 189,
-      "last_modified": 1781677811.6946929
+      "size": 10722,
+      "line_count": 224,
+      "last_modified": 1782364686.8844311
     },
     {
       "path": "app/orchestration/scheduler.py",
@@ -274,11 +288,18 @@
       "last_modified": 1781534833.9963963
     },
     {
+      "path": "app/orchestration/session_manager.py",
+      "language": "Python",
+      "size": 1480,
+      "line_count": 47,
+      "last_modified": 1781702909.020066
+    },
+    {
       "path": "app/orchestration/swarm_state.py",
       "language": "Python",
-      "size": 904,
-      "line_count": 21,
-      "last_modified": 1781440507.0765588
+      "size": 946,
+      "line_count": 22,
+      "last_modified": 1781718926.6460075
     },
     {
       "path": "app/orchestration/task_router.py",
@@ -290,9 +311,9 @@
     {
       "path": "app/sandbox/executor.py",
       "language": "Python",
-      "size": 1126,
-      "line_count": 30,
-      "last_modified": 1781440432.4024193
+      "size": 1664,
+      "line_count": 43,
+      "last_modified": 1781702978.2335992
     },
     {
       "path": "app/sandbox/filesystem.py",
@@ -379,6 +400,20 @@
       "last_modified": 1781439768.7519338
     },
     {
+      "path": "app/schemas/prompt_builder.py",
+      "language": "Python",
+      "size": 314,
+      "line_count": 8,
+      "last_modified": 1781718911.3534367
+    },
+    {
+      "path": "app/schemas/release_assistant.py",
+      "language": "Python",
+      "size": 736,
+      "line_count": 10,
+      "last_modified": 1782364650.0174327
+    },
+    {
       "path": "app/schemas/repair.py",
       "language": "Python",
       "size": 652,
@@ -449,6 +484,13 @@
       "last_modified": 1781619683.2572117
     },
     {
+      "path": "app/tools/scrape_url.py",
+      "language": "Python",
+      "size": 1397,
+      "line_count": 43,
+      "last_modified": 1782364575.3182092
+    },
+    {
       "path": "tests/test_context.py",
       "language": "Python",
       "size": 1365,
@@ -489,8 +531,8 @@
       "symbol_name": "run_terminal_command_live",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 22,
-      "end_line": 86,
+      "start_line": 24,
+      "end_line": 88,
       "docstring": null,
       "signature": null
     },
@@ -498,8 +540,17 @@
       "symbol_name": "main",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 88,
-      "end_line": 348,
+      "start_line": 90,
+      "end_line": 398,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "prompt_permission",
+      "symbol_type": "function",
+      "file_path": "run_swarm.py",
+      "start_line": 174,
+      "end_line": 183,
       "docstring": null,
       "signature": null
     },
@@ -507,8 +558,17 @@
       "symbol_name": "run_agentic_workflow",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 159,
-      "end_line": 282,
+      "start_line": 187,
+      "end_line": 302,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "refresh_ui",
+      "symbol_type": "function",
+      "file_path": "run_swarm.py",
+      "start_line": 199,
+      "end_line": 229,
       "docstring": null,
       "signature": null
     },
@@ -516,8 +576,8 @@
       "symbol_name": "make_event_logger",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 166,
-      "end_line": 234,
+      "start_line": 231,
+      "end_line": 247,
       "docstring": null,
       "signature": null
     },
@@ -525,8 +585,8 @@
       "symbol_name": "handler",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 167,
-      "end_line": 233,
+      "start_line": 232,
+      "end_line": 246,
       "docstring": null,
       "signature": null
     },
@@ -534,8 +594,8 @@
       "symbol_name": "thought_handler",
       "symbol_type": "function",
       "file_path": "run_swarm.py",
-      "start_line": 250,
-      "end_line": 265,
+      "start_line": 260,
+      "end_line": 263,
       "docstring": null,
       "signature": null
     },
@@ -553,7 +613,7 @@
       "symbol_type": "class",
       "file_path": "app/agents/base_agent.py",
       "start_line": 7,
-      "end_line": 67,
+      "end_line": 65,
       "docstring": null,
       "signature": null
     },
@@ -571,7 +631,7 @@
       "symbol_type": "function",
       "file_path": "app/agents/base_agent.py",
       "start_line": 14,
-      "end_line": 30,
+      "end_line": 28,
       "docstring": null,
       "signature": null
     },
@@ -579,8 +639,8 @@
       "symbol_name": "BaseAgent.run",
       "symbol_type": "function",
       "file_path": "app/agents/base_agent.py",
-      "start_line": 34,
-      "end_line": 54,
+      "start_line": 32,
+      "end_line": 52,
       "docstring": null,
       "signature": null
     },
@@ -588,8 +648,8 @@
       "symbol_name": "BaseAgent.validate_response",
       "symbol_type": "function",
       "file_path": "app/agents/base_agent.py",
-      "start_line": 56,
-      "end_line": 67,
+      "start_line": 54,
+      "end_line": 65,
       "docstring": null,
       "signature": null
     },
@@ -644,6 +704,60 @@
       "file_path": "app/agents/planner_agent.py",
       "start_line": 13,
       "end_line": 15,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "PromptBuilderAgent",
+      "symbol_type": "class",
+      "file_path": "app/agents/prompt_builder.py",
+      "start_line": 22,
+      "end_line": 42,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "PromptBuilderAgent.__init__",
+      "symbol_type": "function",
+      "file_path": "app/agents/prompt_builder.py",
+      "start_line": 25,
+      "end_line": 27,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "PromptBuilderAgent.build_prompt",
+      "symbol_type": "function",
+      "file_path": "app/agents/prompt_builder.py",
+      "start_line": 29,
+      "end_line": 42,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "ReleaseAssistantAgent",
+      "symbol_type": "class",
+      "file_path": "app/agents/release_assistant_agent.py",
+      "start_line": 5,
+      "end_line": 27,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "ReleaseAssistantAgent.__init__",
+      "symbol_type": "function",
+      "file_path": "app/agents/release_assistant_agent.py",
+      "start_line": 8,
+      "end_line": 15,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "ReleaseAssistantAgent.analyze_pr",
+      "symbol_type": "function",
+      "file_path": "app/agents/release_assistant_agent.py",
+      "start_line": 17,
+      "end_line": 27,
       "docstring": null,
       "signature": null
     },
@@ -994,7 +1108,7 @@
       "symbol_type": "class",
       "file_path": "app/context/context_manager.py",
       "start_line": 10,
-      "end_line": 89,
+      "end_line": 136,
       "docstring": null,
       "signature": null
     },
@@ -1035,11 +1149,20 @@
       "signature": null
     },
     {
-      "symbol_name": "ContextManager.retrieve_context",
+      "symbol_name": "ContextManager.refresh_incremental",
       "symbol_type": "function",
       "file_path": "app/context/context_manager.py",
       "start_line": 48,
-      "end_line": 62,
+      "end_line": 84,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "ContextManager.retrieve_context",
+      "symbol_type": "function",
+      "file_path": "app/context/context_manager.py",
+      "start_line": 86,
+      "end_line": 109,
       "docstring": null,
       "signature": null
     },
@@ -1047,8 +1170,8 @@
       "symbol_name": "ContextManager.get_symbol_context",
       "symbol_type": "function",
       "file_path": "app/context/context_manager.py",
-      "start_line": 64,
-      "end_line": 69,
+      "start_line": 111,
+      "end_line": 116,
       "docstring": null,
       "signature": null
     },
@@ -1056,8 +1179,8 @@
       "symbol_name": "ContextManager.get_file_context",
       "symbol_type": "function",
       "file_path": "app/context/context_manager.py",
-      "start_line": 71,
-      "end_line": 76,
+      "start_line": 118,
+      "end_line": 123,
       "docstring": null,
       "signature": null
     },
@@ -1065,8 +1188,8 @@
       "symbol_name": "ContextManager.get_module_context",
       "symbol_type": "function",
       "file_path": "app/context/context_manager.py",
-      "start_line": 78,
-      "end_line": 79,
+      "start_line": 125,
+      "end_line": 126,
       "docstring": null,
       "signature": null
     },
@@ -1074,8 +1197,8 @@
       "symbol_name": "ContextManager.get_neighborhood",
       "symbol_type": "function",
       "file_path": "app/context/context_manager.py",
-      "start_line": 81,
-      "end_line": 89,
+      "start_line": 128,
+      "end_line": 136,
       "docstring": null,
       "signature": null
     },
@@ -1767,8 +1890,8 @@
       "symbol_name": "SwarmOrchestrator",
       "symbol_type": "class",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 25,
-      "end_line": 189,
+      "start_line": 27,
+      "end_line": 224,
       "docstring": null,
       "signature": null
     },
@@ -1776,8 +1899,8 @@
       "symbol_name": "SwarmOrchestrator.__init__",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 28,
-      "end_line": 43,
+      "start_line": 30,
+      "end_line": 47,
       "docstring": null,
       "signature": null
     },
@@ -1785,8 +1908,8 @@
       "symbol_name": "SwarmOrchestrator._generate_error_signature",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 45,
-      "end_line": 64,
+      "start_line": 49,
+      "end_line": 68,
       "docstring": null,
       "signature": null
     },
@@ -1794,8 +1917,26 @@
       "symbol_name": "SwarmOrchestrator.on_thought_chunk",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 66,
-      "end_line": 67,
+      "start_line": 70,
+      "end_line": 71,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SwarmOrchestrator.generate_plan",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/orchestrator.py",
+      "start_line": 73,
+      "end_line": 77,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SwarmOrchestrator.execute_plan",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/orchestrator.py",
+      "start_line": 79,
+      "end_line": 165,
       "docstring": null,
       "signature": null
     },
@@ -1803,8 +1944,17 @@
       "symbol_name": "SwarmOrchestrator.receive_request",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 69,
-      "end_line": 156,
+      "start_line": 167,
+      "end_line": 170,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SwarmOrchestrator.run_prompt_builder",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/orchestrator.py",
+      "start_line": 172,
+      "end_line": 176,
       "docstring": null,
       "signature": null
     },
@@ -1812,8 +1962,8 @@
       "symbol_name": "SwarmOrchestrator.run_planner",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 158,
-      "end_line": 162,
+      "start_line": 178,
+      "end_line": 182,
       "docstring": null,
       "signature": null
     },
@@ -1821,8 +1971,8 @@
       "symbol_name": "SwarmOrchestrator.run_executors",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 164,
-      "end_line": 177,
+      "start_line": 184,
+      "end_line": 197,
       "docstring": null,
       "signature": null
     },
@@ -1830,8 +1980,8 @@
       "symbol_name": "SwarmOrchestrator.run_reviewer",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 179,
-      "end_line": 186,
+      "start_line": 199,
+      "end_line": 206,
       "docstring": null,
       "signature": null
     },
@@ -1839,8 +1989,17 @@
       "symbol_name": "SwarmOrchestrator.return_result",
       "symbol_type": "function",
       "file_path": "app/orchestration/orchestrator.py",
-      "start_line": 188,
-      "end_line": 189,
+      "start_line": 208,
+      "end_line": 209,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SwarmOrchestrator.run_release_assistant",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/orchestrator.py",
+      "start_line": 211,
+      "end_line": 224,
       "docstring": null,
       "signature": null
     },
@@ -1872,11 +2031,65 @@
       "signature": null
     },
     {
+      "symbol_name": "SessionData",
+      "symbol_type": "class",
+      "file_path": "app/orchestration/session_manager.py",
+      "start_line": 10,
+      "end_line": 13,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SessionManager",
+      "symbol_type": "class",
+      "file_path": "app/orchestration/session_manager.py",
+      "start_line": 15,
+      "end_line": 47,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SessionManager.session_exists",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/session_manager.py",
+      "start_line": 19,
+      "end_line": 20,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SessionManager.save_session",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/session_manager.py",
+      "start_line": 23,
+      "end_line": 30,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SessionManager.load_session",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/session_manager.py",
+      "start_line": 33,
+      "end_line": 42,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "SessionManager.clear_session",
+      "symbol_type": "function",
+      "file_path": "app/orchestration/session_manager.py",
+      "start_line": 45,
+      "end_line": 47,
+      "docstring": null,
+      "signature": null
+    },
+    {
       "symbol_name": "SwarmState",
       "symbol_type": "class",
       "file_path": "app/orchestration/swarm_state.py",
       "start_line": 9,
-      "end_line": 21,
+      "end_line": 22,
       "docstring": null,
       "signature": null
     },
@@ -1912,7 +2125,7 @@
       "symbol_type": "class",
       "file_path": "app/sandbox/executor.py",
       "start_line": 6,
-      "end_line": 30,
+      "end_line": 43,
       "docstring": null,
       "signature": null
     },
@@ -1921,7 +2134,7 @@
       "symbol_type": "function",
       "file_path": "app/sandbox/executor.py",
       "start_line": 9,
-      "end_line": 11,
+      "end_line": 12,
       "docstring": null,
       "signature": null
     },
@@ -1929,8 +2142,8 @@
       "symbol_name": "SandboxExecutor.run_command",
       "symbol_type": "function",
       "file_path": "app/sandbox/executor.py",
-      "start_line": 13,
-      "end_line": 30,
+      "start_line": 14,
+      "end_line": 43,
       "docstring": null,
       "signature": null
     },
@@ -2178,6 +2391,24 @@
       "signature": null
     },
     {
+      "symbol_name": "PromptBuilderResult",
+      "symbol_type": "class",
+      "file_path": "app/schemas/prompt_builder.py",
+      "start_line": 3,
+      "end_line": 8,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "ReleaseReport",
+      "symbol_type": "class",
+      "file_path": "app/schemas/release_assistant.py",
+      "start_line": 4,
+      "end_line": 10,
+      "docstring": null,
+      "signature": null
+    },
+    {
       "symbol_name": "RepairPlan",
       "symbol_type": "class",
       "file_path": "app/schemas/repair.py",
@@ -2291,6 +2522,69 @@
       "file_path": "app/tools/run_ruff.py",
       "start_line": 3,
       "end_line": 11,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "TextExtractor",
+      "symbol_type": "class",
+      "file_path": "app/tools/scrape_url.py",
+      "start_line": 5,
+      "end_line": 26,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "TextExtractor.__init__",
+      "symbol_type": "function",
+      "file_path": "app/tools/scrape_url.py",
+      "start_line": 6,
+      "end_line": 9,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "TextExtractor.handle_starttag",
+      "symbol_type": "function",
+      "file_path": "app/tools/scrape_url.py",
+      "start_line": 11,
+      "end_line": 13,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "TextExtractor.handle_endtag",
+      "symbol_type": "function",
+      "file_path": "app/tools/scrape_url.py",
+      "start_line": 15,
+      "end_line": 17,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "TextExtractor.handle_data",
+      "symbol_type": "function",
+      "file_path": "app/tools/scrape_url.py",
+      "start_line": 19,
+      "end_line": 23,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "TextExtractor.get_text",
+      "symbol_type": "function",
+      "file_path": "app/tools/scrape_url.py",
+      "start_line": 25,
+      "end_line": 26,
+      "docstring": null,
+      "signature": null
+    },
+    {
+      "symbol_name": "scrape_url",
+      "symbol_type": "function",
+      "file_path": "app/tools/scrape_url.py",
+      "start_line": 28,
+      "end_line": 43,
       "docstring": null,
       "signature": null
     },

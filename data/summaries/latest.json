@@ -1,10 +1,10 @@
 {
-  "repository_summary": "Repository summary: 69 files, 219 symbols total.",
+  "repository_summary": "Repository summary: 75 files, 247 symbols total.",
   "module_summaries": [],
   "file_summaries": [
     {
       "file_path": "run_swarm.py",
-      "summary": "run_swarm.py (Python): 355 lines, 6 symbols."
+      "summary": "run_swarm.py (Python): 405 lines, 8 symbols."
     },
     {
       "file_path": "app/config.py",
@@ -16,7 +16,7 @@
     },
     {
       "file_path": "app/agents/base_agent.py",
-      "summary": "app/agents/base_agent.py (Python): 68 lines, 5 symbols."
+      "summary": "app/agents/base_agent.py (Python): 66 lines, 5 symbols."
     },
     {
       "file_path": "app/agents/executor_agent.py",
@@ -25,6 +25,14 @@
     {
       "file_path": "app/agents/planner_agent.py",
       "summary": "app/agents/planner_agent.py (Python): 15 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/agents/prompt_builder.py",
+      "summary": "app/agents/prompt_builder.py (Python): 42 lines, 3 symbols."
+    },
+    {
+      "file_path": "app/agents/release_assistant_agent.py",
+      "summary": "app/agents/release_assistant_agent.py (Python): 27 lines, 3 symbols."
     },
     {
       "file_path": "app/agents/repair_agent.py",
@@ -72,7 +80,7 @@
     },
     {
       "file_path": "app/context/context_manager.py",
-      "summary": "app/context/context_manager.py (Python): 89 lines, 10 symbols."
+      "summary": "app/context/context_manager.py (Python): 136 lines, 11 symbols."
     },
     {
       "file_path": "app/context/graph_builder.py",
@@ -152,15 +160,19 @@
     },
     {
       "file_path": "app/orchestration/orchestrator.py",
-      "summary": "app/orchestration/orchestrator.py (Python): 189 lines, 9 symbols."
+      "summary": "app/orchestration/orchestrator.py (Python): 224 lines, 13 symbols."
     },
     {
       "file_path": "app/orchestration/scheduler.py",
       "summary": "app/orchestration/scheduler.py (Python): 25 lines, 3 symbols."
     },
     {
+      "file_path": "app/orchestration/session_manager.py",
+      "summary": "app/orchestration/session_manager.py (Python): 47 lines, 6 symbols."
+    },
+    {
       "file_path": "app/orchestration/swarm_state.py",
-      "summary": "app/orchestration/swarm_state.py (Python): 21 lines, 1 symbols."
+      "summary": "app/orchestration/swarm_state.py (Python): 22 lines, 1 symbols."
     },
     {
       "file_path": "app/orchestration/task_router.py",
@@ -168,7 +180,7 @@
     },
     {
       "file_path": "app/sandbox/executor.py",
-      "summary": "app/sandbox/executor.py (Python): 30 lines, 3 symbols."
+      "summary": "app/sandbox/executor.py (Python): 43 lines, 3 symbols."
     },
     {
       "file_path": "app/sandbox/filesystem.py",
@@ -219,6 +231,14 @@
       "summary": "app/schemas/planner.py (Python): 14 lines, 2 symbols."
     },
     {
+      "file_path": "app/schemas/prompt_builder.py",
+      "summary": "app/schemas/prompt_builder.py (Python): 8 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/schemas/release_assistant.py",
+      "summary": "app/schemas/release_assistant.py (Python): 10 lines, 1 symbols."
+    },
+    {
       "file_path": "app/schemas/repair.py",
       "summary": "app/schemas/repair.py (Python): 22 lines, 2 symbols."
     },
@@ -257,6 +277,10 @@
     {
       "file_path": "app/tools/run_ruff.py",
       "summary": "app/tools/run_ruff.py (Python): 12 lines, 1 symbols."
+    },
+    {
+      "file_path": "app/tools/scrape_url.py",
+      "summary": "app/tools/scrape_url.py (Python): 43 lines, 7 symbols."
     },
     {
       "file_path": "tests/test_context.py",

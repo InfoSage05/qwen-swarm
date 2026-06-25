@@ -6,6 +6,7 @@ from app.agents.executor_agent import ExecutorAgent
 from app.agents.reviewer_agent import ReviewerAgent
 from app.agents.repair_agent import RepairAgent
 from app.agents.prompt_builder import PromptBuilderAgent
+from app.agents.release_assistant_agent import ReleaseAssistantAgent
 from app.orchestration.event_bus import EventBus
 from app.orchestration.swarm_state import SwarmState
 from app.orchestration.task_router import TaskRouter
@@ -38,6 +39,7 @@ class SwarmOrchestrator:
         self.reviewer = ReviewerAgent(self.client)
         self.repair = RepairAgent(self.client)
         self.prompt_builder = PromptBuilderAgent(self.client)
+        self.release_assistant = ReleaseAssistantAgent(self.client)
         
         self.router = TaskRouter(self.executors)
         self.scheduler = Scheduler()
@@ -205,3 +207,18 @@ class SwarmOrchestrator:
 
     def return_result(self) -> ReviewDecision:
         return self.state.review
+
+    async def run_release_assistant(self, pr_context: str):
+        from app.schemas.release_assistant import ReleaseReport
+        # If the input is a URL, we try to scrape it or at least use it
+        # Real-world use might fetch a git diff using httpx here.
+        # Since scrape_url is handy, we can use it if it's a URL.
+        if pr_context.startswith("http"):
+            from app.tools.scrape_url import scrape_url
+            scraped_content = await scrape_url(pr_context)
+            pr_context = f"PR URL: {pr_context}\n\nContent:\n{scraped_content}"
+            
+        await self.event_bus.publish("WORKFLOW_STARTED", "Release Readiness Review")
+        report = await self.release_assistant.analyze_pr(self.context_payload, pr_context, self.on_thought_chunk)
+        await self.event_bus.publish("TASK_COMPLETED", [report])
+        return report

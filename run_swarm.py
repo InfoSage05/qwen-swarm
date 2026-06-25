@@ -276,7 +276,18 @@ async def main():
                     result = await orchestrator.execute_plan()
                 else:
                     await orchestrator.generate_plan(task_request)
-                    result = await orchestrator.execute_plan()
+                    live.stop()
+                    console.print("\n[bold yellow]📋 Plan Generated:[/bold yellow]")
+                    for task in orchestrator.state.plan.tasks:
+                        console.print(f"  - [bold]{task.id}[/bold]: {task.title}")
+                    
+                    choice = input("\nDo you approve this plan to proceed with execution? (Y/n): ").strip().lower()
+                    if choice != 'n':
+                        live.start()
+                        result = await orchestrator.execute_plan()
+                    else:
+                        console.print("[yellow]Execution aborted by user.[/yellow]")
+                        result = None
                 live_instance = None
                 orchestrator._current_live = None
                 
@@ -290,14 +301,20 @@ async def main():
             traceback.print_exc()
             return None
 
+    import re
+    from app.tools.scrape_url import scrape_url
+
     # Step 4: Interactive Chat Loop
     console.print("\n[bold cyan]Step 4: Interactive Swarm Shell[/bold cyan]")
     console.print("You can ask questions, or use the following commands:")
-    console.print("  [bold]!cmd[/bold]          - Run a terminal command")
+    console.print("  [bold]!cmd[/bold]          - Run a terminal command (or just type common bash cmds)")
     console.print("  [bold]/agent msg[/bold]    - Full autonomous swarm run")
     console.print("  [bold]/plan msg[/bold]     - Generate an execution plan only")
     console.print("  [bold]/execute[/bold]      - Execute the currently generated plan")
+    console.print("  [bold]/pr url[/bold]       - Run AI PR Review & Release Assistant")
     console.print("  [bold]/quit[/bold]         - Exit")
+    
+    BASH_COMMANDS = ("ls", "cat", "git", "python", "mkdir", "rm", "cp", "mv", "grep", "echo", "pwd", "cd")
     
     while True:
         try:
@@ -307,8 +324,29 @@ async def main():
             if not chat_input:
                 continue
                 
+            # Scrape URLs if any are in the input
+            urls = re.findall(r'(https?://[^\s]+)', chat_input)
+            if urls:
+                for url in urls:
+                    console.print(f"[cyan]Scraping URL: {url}[/cyan]")
+                    scraped_text = await scrape_url(url)
+                    chat_input += f"\n\n[Scraped content from {url}]:\n{scraped_text}\n"
+                    
             if chat_input.startswith("!") or chat_input.startswith("/run ") or chat_input.startswith("/cmd "):
                 await run_terminal_command_live(chat_input, console)
+                continue
+                
+            if chat_input.startswith("/pr "):
+                pr_context = chat_input.split(" ", 1)[1] if " " in chat_input else ""
+                console.print(f"[bold magenta]Running Release Assistant for: {pr_context}[/bold magenta]")
+                report = await orchestrator.run_release_assistant(pr_context)
+                if report:
+                    console.print(f"[bold green]Release Report Generated![/bold green]")
+                    console.print(report.model_dump_json(indent=2))
+                continue
+                
+            if any(chat_input.startswith(cmd + " ") or chat_input == cmd for cmd in BASH_COMMANDS):
+                await run_terminal_command_live("!" + chat_input, console)
                 continue
                 
             if chat_input.startswith("/agent ") or chat_input.startswith("/swarm "):
