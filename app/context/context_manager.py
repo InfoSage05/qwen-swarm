@@ -11,12 +11,13 @@ class ContextManager:
     """The core component for repository intelligence."""
     
     def __init__(self, root_dir: str):
+        import os
         self.indexer = RepoIndexer(root_dir)
         self.parser = TreeSitterParser()
         self.extractor = SymbolExtractor()
         self.graph_builder = GraphBuilder()
         self.summarizer = RepositorySummarizer()
-        self.cache = RepoCache()
+        self.cache = RepoCache(os.path.join(root_dir, ".repopilot"))
         
         self.graph = None
         self.summary = None

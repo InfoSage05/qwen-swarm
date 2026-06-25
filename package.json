@@ -1,0 +1,25 @@
+{
+  "name": "repo-pilot",
+  "version": "1.0.0",
+  "description": "Zero-Copy Multi-Agent Software Engineering System",
+  "main": "bin/cli.js",
+  "bin": {
+    "repopilot": "./bin/cli.js",
+    "repo-pilot": "./bin/cli.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "app/",
+    "prompts/",
+    "run_swarm.py",
+    "requirements.txt",
+    "bin/",
+    "README.md",
+    "README.pdf",
+    ".env.example"
+  ]
+}
