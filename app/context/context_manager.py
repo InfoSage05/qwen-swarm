@@ -21,6 +21,7 @@ class ContextManager:
         
         self.graph = None
         self.summary = None
+        self.external_context = []
 
     def build(self):
         """Constructs the repository context from scratch."""
@@ -106,6 +107,11 @@ class ContextManager:
         for file_sum in self.summary.file_summaries:
             payload += f"- {file_sum.summary}\n"
             
+        if self.external_context:
+            payload += "\n=== EXTERNAL CONTEXT (Web & URLs) ===\n"
+            for ext in self.external_context:
+                payload += f"--- Source: {ext['source']} ---\n{ext['content']}\n\n"
+            
         payload += "=== END REPOSITORY CONTEXT ===\n\n" + git_status
         return payload
         
@@ -135,3 +141,10 @@ class ContextManager:
             "callers": [],
             "callees": []
         }
+
+    def add_external_context(self, source_name: str, content: str):
+        """Adds external fetched information (URLs, Search Results) to the context memory."""
+        self.external_context.append({
+            "source": source_name,
+            "content": content
+        })

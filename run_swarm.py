@@ -329,6 +329,7 @@ async def main():
 
     import re
     from app.tools.scrape_url import scrape_url
+    from app.tools.web_search import perform_web_search
 
     # Step 4: Interactive Chat Loop
     console.print("\n[bold cyan]Step 4: Interactive Swarm Shell[/bold cyan]")
@@ -337,6 +338,7 @@ async def main():
     console.print("  [bold]/agent msg[/bold]    - Full autonomous swarm run")
     console.print("  [bold]/plan msg[/bold]     - Generate an execution plan only")
     console.print("  [bold]/execute[/bold]      - Execute the currently generated plan")
+    console.print("  [bold]/search q[/bold]      - Perform web search and add to context memory")
     console.print("  [bold]/pr url[/bold]       - Run AI PR Review & Release Assistant")
     console.print("  [bold]/quit[/bold]         - Exit")
     
@@ -356,8 +358,28 @@ async def main():
                 for url in urls:
                     console.print(f"[cyan]Scraping URL: {url}[/cyan]")
                     scraped_text = await scrape_url(url)
-                    chat_input += f"\n\n[Scraped content from {url}]:\n{scraped_text}\n"
+                    cm.add_external_context(url, scraped_text)
+                    console.print(f"[bold green]✔ Stored URL content in context memory![/bold green]")
+                
+                # Update context payload
+                payload = cm.retrieve_context()
+                orchestrator.context_payload = payload
+                chat_history[0]["content"] = f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{payload}"
+                
+            if chat_input.startswith("/search "):
+                query = chat_input.split(" ", 1)[1].strip()
+                if query:
+                    console.print(f"[bold magenta]Searching web for:[/bold magenta] {query}")
+                    search_results = await perform_web_search(query)
+                    console.print(search_results)
+                    cm.add_external_context(f"Web Search: {query}", search_results)
+                    console.print(f"[bold green]✔ Stored search results in context memory![/bold green]")
                     
+                    # Update context payload
+                    payload = cm.retrieve_context()
+                    orchestrator.context_payload = payload
+                    chat_history[0]["content"] = f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{payload}"
+                continue
             if chat_input.startswith("!") or chat_input.startswith("/run ") or chat_input.startswith("/cmd "):
                 await run_terminal_command_live(chat_input, console)
                 continue
