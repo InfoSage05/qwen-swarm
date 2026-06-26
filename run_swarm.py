@@ -142,14 +142,17 @@ async def main():
         console.print("  [1] Qwen Cloud Services (DashScope) [Recommended]")
         console.print("  [2] Modal + SGLang")
         console.print("  [3] Local / Custom vLLM")
+        console.print("  [4] Zhipu AI / GLM")
         
         default_opt = "1"
         if settings.BACKEND_TYPE == "sglang":
             default_opt = "2"
         elif settings.BACKEND_TYPE == "vllm":
             default_opt = "3"
+        elif settings.BACKEND_TYPE == "glm":
+            default_opt = "4"
             
-        choice = input(f"Choose backend (1-3, default {default_opt}): ").strip()
+        choice = input(f"Choose backend (1-4, default {default_opt}): ").strip()
         if not choice:
             choice = default_opt
             
@@ -159,6 +162,8 @@ async def main():
             settings.BACKEND_TYPE = "sglang"
         elif choice == "3":
             settings.BACKEND_TYPE = "vllm"
+        elif choice == "4":
+            settings.BACKEND_TYPE = "glm"
         else:
             console.print(f"[yellow]Invalid choice, using configuration default: {settings.BACKEND_TYPE}[/yellow]")
 
@@ -184,7 +189,7 @@ async def main():
         
     orchestrator.sandbox.ask_permission = prompt_permission
 
-    async def run_agentic_workflow(task_request: str, mode: str = "full"):
+    async def run_agentic_workflow(task_request: str, mode: str = "full", image_url: str = None):
         thought_content = ""
         live_instance = None
         log_lines = []
@@ -205,9 +210,15 @@ async def main():
             table.add_column("Status", style="bold")
             
             for t in orchestrator.state.completed_tasks:
-                table.add_row(t.id, "[green]Completed[/green]")
+                if isinstance(t, dict):
+                    table.add_row(t.get("id", "-"), "[green]Completed[/green]")
+                else:
+                    table.add_row(t.id, "[green]Completed[/green]")
             for t in orchestrator.state.active_tasks:
-                table.add_row(t.id, "[yellow]In Progress[/yellow]")
+                if isinstance(t, dict):
+                    table.add_row(t.get("id", "-"), "[yellow]In Progress[/yellow]")
+                else:
+                    table.add_row(t.id, "[yellow]In Progress[/yellow]")
                 
             layout["sidebar"].update(Panel(table, title="📋 Task List", border_style="cyan"))
             
@@ -269,25 +280,40 @@ async def main():
             with Live(layout, console=console, refresh_per_second=15) as live:
                 live_instance = live
                 orchestrator._current_live = live
-                if mode == "plan":
-                    await orchestrator.generate_plan(task_request)
-                    result = None
-                elif mode == "execute":
+                
+                if mode == "execute":
                     result = await orchestrator.execute_plan()
                 else:
-                    await orchestrator.generate_plan(task_request)
-                    live.stop()
-                    console.print("\n[bold yellow]📋 Plan Generated:[/bold yellow]")
-                    for task in orchestrator.state.plan.tasks:
-                        console.print(f"  - [bold]{task.id}[/bold]: {task.title}")
-                    
-                    choice = input("\nDo you approve this plan to proceed with execution? (Y/n): ").strip().lower()
-                    if choice != 'n':
-                        live.start()
-                        result = await orchestrator.execute_plan()
-                    else:
-                        console.print("[yellow]Execution aborted by user.[/yellow]")
+                    # Both "plan" and "full" modes need to generate a plan and handle clarification
+                    while True:
+                        await orchestrator.generate_plan(task_request, image_url)
+                        if getattr(orchestrator.state.workflow, "needs_clarification", False):
+                            live.stop()
+                            console.print(f"\n[bold yellow]🤔 The Swarm needs clarification:[/bold yellow]")
+                            console.print(orchestrator.state.workflow.clarification_question)
+                            clarification = input("\nRefine task (or press Enter to ignore and force execution): ").strip()
+                            if clarification:
+                                task_request += f"\n\nUser Clarification: {clarification}"
+                                live.start()
+                                continue
+                        break # Plan is clear, proceed!
+                        
+                    if mode == "plan":
                         result = None
+                    else:
+                        live.stop()
+                        console.print("\n[bold yellow]📋 Plan Generated:[/bold yellow]")
+                        for task in orchestrator.state.plan.tasks:
+                            console.print(f"  - [bold]{task['id']}[/bold]: {task['title']}")
+                        
+                        choice = input("\nDo you approve this plan to proceed with execution? (Y/n): ").strip().lower()
+                        if choice != 'n':
+                            live.start()
+                            result = await orchestrator.execute_plan()
+                        else:
+                            console.print("[yellow]Execution aborted by user.[/yellow]")
+                            result = None
+                            
                 live_instance = None
                 orchestrator._current_live = None
                 
@@ -350,15 +376,26 @@ async def main():
                 continue
                 
             if chat_input.startswith("/agent ") or chat_input.startswith("/swarm "):
+                # Extract optional --image
+                image_url = None
+                if " --image " in chat_input:
+                    chat_input, image_url = chat_input.split(" --image ", 1)
+                    image_url = image_url.strip()
+                
                 new_task = chat_input.split(" ", 1)[1]
-                new_result = await run_agentic_workflow(new_task, mode="full")
+                new_result = await run_agentic_workflow(new_task, mode="full", image_url=image_url)
                 if new_result:
                     chat_history.append({"role": "system", "content": f"Task '{new_task}' completed. Review: {new_result.approved}"})
                 continue
                 
             if chat_input.startswith("/plan "):
+                image_url = None
+                if " --image " in chat_input:
+                    chat_input, image_url = chat_input.split(" --image ", 1)
+                    image_url = image_url.strip()
+                    
                 new_task = chat_input.split(" ", 1)[1]
-                await run_agentic_workflow(new_task, mode="plan")
+                await run_agentic_workflow(new_task, mode="plan", image_url=image_url)
                 chat_history.append({"role": "system", "content": f"Plan generated for: '{new_task}'."})
                 continue
                 

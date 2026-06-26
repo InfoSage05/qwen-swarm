@@ -17,7 +17,9 @@ A subtask could directly ask the language model to solve the given question from
 
 Based on your answer, the first model selected will be prompted with the user question and the first subtask you define. Each following model in the sequence will be prompted with the history of the previous subtask and response messages specified in its access list, and will be asked to accomplish its relative subtask. The answer of the final model and subtask will be provided back as the final solution to the user.
 
-Your response should be provided according to the structured schema output, containing three lists:
+Your response should be provided according to the structured schema output, containing these key fields:
+- needs_clarification: Set this to true ONLY IF the user's request is too ambiguous or underspecified to formulate a solid plan.
+- clarification_question: If needs_clarification is true, provide the exact question you want to ask the user to clarify their intent.
 - model_id: the integers corresponding to the numbered language models in the sequence you want to prompt.
 - subtasks: strings that will be used to prompt the corresponding language model.
 - access_list: lists of past routing messages to include in the context. E.g., ['all'] for everything, or [] for none.

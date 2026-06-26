@@ -62,22 +62,31 @@ class SwarmOrchestrator:
     async def on_thought_chunk(self, chunk: str):
         await self.event_bus.publish("MODEL_THINKING", chunk)
 
-    async def receive_request(self, user_request: str) -> ReviewDecision:
+    async def generate_plan(self, user_request: str, image_url: Optional[str] = None):
+        """Phase 1: Conductor dynamically generates the topology and subtasks"""
         await self.event_bus.publish("WORKFLOW_STARTED", user_request)
         
-        # 1. Conductor dynamically generates the topology and subtasks
-        workflow = await self.conductor.create_workflow(self.context_payload, user_request, self.on_thought_chunk)
+        self.state.image_url = image_url
+        self.state.user_request = user_request
+        self.state.workflow = await self.conductor.create_workflow(self.context_payload, user_request, self.on_thought_chunk)
         
-        # Signal the UI that we have a plan (in place of the old PLAN_CREATED)
-        # We wrap the workflow in a generic object so the UI can log it.
         class DummyPlan:
-            tasks = [{"title": subtask, "description": subtask} for subtask in workflow.subtasks]
-        await self.event_bus.publish("PLAN_CREATED", DummyPlan())
+            tasks = [{"id": str(i), "title": subtask, "description": subtask} for i, subtask in enumerate(self.state.workflow.subtasks)]
+        self.state.plan = DummyPlan()
         
+        await self.event_bus.publish("PLAN_CREATED", self.state.plan)
+
+    async def execute_plan(self) -> ReviewDecision:
+        """Phase 2: Execute the dynamic workflow and Sandbox"""
+        if not hasattr(self.state, 'workflow') or not self.state.workflow:
+            raise ValueError("No workflow has been generated. Call generate_plan first.")
+            
         past_responses = []
         final_proposed_patch = None
+        workflow = self.state.workflow
+        user_request = self.state.user_request
+        image_url = getattr(self.state, 'image_url', None)
         
-        # 2. Iterate through the dynamic workflow
         for step_idx, subtask in enumerate(workflow.subtasks):
             model_id = workflow.model_id[step_idx] if step_idx < len(workflow.model_id) else 0
             access_spec = workflow.access_list[step_idx] if step_idx < len(workflow.access_list) else []
@@ -90,35 +99,46 @@ class SwarmOrchestrator:
                     if isinstance(idx, int) and idx < len(past_responses):
                         context_responses.append(past_responses[idx])
             
-            # Announce task started for UI
             await self.event_bus.publish("TASK_STARTED", [{"task": {"title": subtask}, "agent_id": f"Model {model_id}"}])
             
-            # Worker Agent executes the tailored prompt
-            worker_response = await self.worker.execute_subtask(
-                context_payload=self.context_payload,
-                user_request=user_request,
-                subtask=subtask,
-                past_responses=context_responses,
-                on_chunk=self.on_thought_chunk
-            )
+            # If model_id is 5, we use the vision subtask path
+            if model_id == 5 and image_url:
+                worker_response = await self.worker.execute_vision_subtask(
+                    context_payload=self.context_payload,
+                    user_request=user_request,
+                    subtask=subtask,
+                    past_responses=context_responses,
+                    image_url=image_url,
+                    on_chunk=self.on_thought_chunk
+                )
+            else:
+                worker_response = await self.worker.execute_subtask(
+                    context_payload=self.context_payload,
+                    user_request=user_request,
+                    subtask=subtask,
+                    past_responses=context_responses,
+                    on_chunk=self.on_thought_chunk
+                )
             
             past_responses.append(worker_response.response)
             
             if worker_response.proposed_patch:
                 final_proposed_patch = worker_response.proposed_patch
                 
-            # Announce task completed for UI
             class DummyResult:
                 task = {"title": subtask}
                 status = "Success"
                 feedback = "Completed dynamically"
             await self.event_bus.publish("TASK_COMPLETED", [DummyResult()])
             
-        # 3. Sandbox Verification & Self-Healing Loop
         if final_proposed_patch:
             return await self._run_sandbox_loop(final_proposed_patch)
             
         return ReviewDecision(approved=True, feedback="No code changes proposed.", confidence=1.0)
+
+    async def receive_request(self, user_request: str, image_url: Optional[str] = None) -> ReviewDecision:
+        await self.generate_plan(user_request, image_url)
+        return await self.execute_plan()
         
     async def _run_sandbox_loop(self, proposed_patch: str) -> ReviewDecision:
         with self.sandbox.fs.create_isolated_workspace(".") as workspace:

@@ -19,6 +19,10 @@ class Settings(BaseSettings):
 
     # API key for the inference service
     OPENAI_API_KEY: str = "swarm-key"
+    
+    # Zhipu AI / GLM Integration
+    GLM_API_KEY: Optional[str] = "c40400ea21914321a3243a8c69c09dd9.NiRTqvSX9a5zCb6W"
+    GLM_ENDPOINT_URL: Optional[str] = "https://api.z.ai/api/coding/paas/v4"
 
     # Multi-Modal Vision Model Integration via OpenRouter
     OPENROUTER_API_KEY: Optional[str] = None

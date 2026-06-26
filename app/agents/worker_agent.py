@@ -63,3 +63,42 @@ class WorkerAgent:
         except Exception as e:
             logger.error(f"Failed to parse Worker Response: {e}")
             return WorkerResponse(response=str(response))
+
+    async def execute_vision_subtask(
+        self,
+        context_payload: str,
+        user_request: str,
+        subtask: str,
+        past_responses: List[str],
+        image_url: str,
+        on_chunk: Callable[[str], Awaitable[None]] = None
+    ) -> WorkerResponse:
+        
+        user_content = f"ORIGINAL USER REQUEST:\n{user_request}\n\nREPOSITORY CONTEXT:\n{context_payload}\n\n"
+        
+        if past_responses:
+            user_content += "--- PREVIOUS AGENT RESPONSES ---\n"
+            for i, past in enumerate(past_responses):
+                user_content += f"Agent {i} Output:\n{past}\n\n"
+            user_content += "--------------------------------\n\n"
+            
+        user_content += f"YOUR ASSIGNED SUBTASK (Analyze the attached image):\n{subtask}"
+        
+        messages = [
+            {"role": "system", "content": WORKER_SYSTEM_PROMPT.strip()},
+            {"role": "user", "content": user_content}
+        ]
+        
+        response = await self.client.vision_chat(
+            messages=messages,
+            image_url=image_url,
+            response_format=WorkerResponse,
+            temperature=0.3,
+            on_chunk=on_chunk
+        )
+        
+        try:
+            return WorkerResponse.model_validate(response)
+        except Exception as e:
+            logger.error(f"Failed to parse Vision Worker Response: {e}")
+            return WorkerResponse(response=str(response))

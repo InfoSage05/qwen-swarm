@@ -7,6 +7,14 @@ class ConductorWorkflow(BaseModel):
     It specifies which models to query, what subtasks to give them,
     and the communication topology (who sees what).
     """
+    needs_clarification: bool = Field(
+        default=False,
+        description="Set to true if the user's request is ambiguous or lacks necessary details to formulate a solid plan."
+    )
+    clarification_question: str | None = Field(
+        default=None,
+        description="The question to ask the user if needs_clarification is true."
+    )
     model_id: List[int] = Field(
         description="The integers corresponding to the numbered language models in the sequence you want to prompt."
     )

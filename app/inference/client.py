@@ -36,6 +36,9 @@ class InferenceClient:
         elif settings.BACKEND_TYPE == "dashscope":
             from app.inference.dashscope_backend import DashScopeBackend
             self.backend = DashScopeBackend()
+        elif settings.BACKEND_TYPE == "glm":
+            from app.inference.glm_backend import GLMBackend
+            self.backend = GLMBackend()
         else:
             raise ValueError(f"Unknown backend type: {settings.BACKEND_TYPE}")
             
