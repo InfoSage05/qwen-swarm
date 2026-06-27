@@ -78,3 +78,5 @@ pytest-asyncio>=0.23.0
 # transformers>=4.43.0         # HuggingFace model loading
 # accelerate>=0.31.0           # Multi-GPU / mixed-precision utilities
 # xgrammar>=0.1.6              # GPU-side structured-output logit processor
+
+duckduckgo_search
