@@ -1,18 +1,55 @@
-# RepoPilot Memory
-.repopilot/
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+myenv/
 
-# Python caching & environments
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-.mypy_cache/
-.pytest_cache/
-.ruff_cache/
-.venv/
-venv/
-ENV/
-env/
-myenv/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Environments
-.env
+# Caches
+.cache/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Application specific
+data/sessions/
+.repopilot/

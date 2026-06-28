@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "repopilot"
+version = "0.1.0"
+description = "Zero-Copy Multi-Agent Software Engineering System"
+authors = [
+    { name = "InfoSage05" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=1.35.0",
+    "pydantic>=2.7.0",
+    "rich>=13.7.0",
+    "python-dotenv>=1.0.0",
+    "httpx>=0.27.0",
+    "duckduckgo-search>=5.3.0",
+    "fastapi>=0.103.0",
+    "uvicorn>=0.23.2",
+    "pydantic-settings>=2.0.3",
+    "tree-sitter>=0.21.0",
+    "tree-sitter-python>=0.21.0",
+    "networkx>=3.2.1",
+    "keyring>=24.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.3.0",
+    "mypy>=1.9.0"
+]
+modal = [
+    "modal>=0.64.0",
+    "sglang[all]>=0.3.6"
+]
+
+[project.scripts]
+repopilot = "app.cli:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+strict_optional = false
