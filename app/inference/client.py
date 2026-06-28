@@ -39,6 +39,9 @@ class InferenceClient:
         elif settings.BACKEND_TYPE == "glm":
             from app.inference.glm_backend import GLMBackend
             self.backend = GLMBackend()
+        elif settings.BACKEND_TYPE == "ollama":
+            from app.inference.ollama_backend import OllamaBackend
+            self.backend = OllamaBackend()
         else:
             raise ValueError(f"Unknown backend type: {settings.BACKEND_TYPE}")
             

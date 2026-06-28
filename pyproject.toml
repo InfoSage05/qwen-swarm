@@ -31,7 +31,8 @@ dependencies = [
     "tree-sitter-typescript",
     "tree-sitter-java",
     "tree-sitter-go",
-    "tree-sitter-rust"
+    "tree-sitter-rust",
+    "ollama>=0.1.0"
 ]
 
 [project.optional-dependencies]

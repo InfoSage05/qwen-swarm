@@ -48,6 +48,7 @@ tree-sitter-typescript
 tree-sitter-java
 tree-sitter-go
 tree-sitter-rust
+ollama>=0.1.0
 
 # ---------------------------------------------------------------------------
 # MODAL CLI — needed locally to deploy / run modal_server.py
