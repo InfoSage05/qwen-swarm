@@ -3,10 +3,11 @@ import tempfile
 import os
 import re
 from app.sandbox.executor import SandboxExecutor
+from app.orchestration.file_lock import file_locks
 
 logger = logging.getLogger(__name__)
 
-def apply_patch_pure_python(patch_content: str, target_dir: str) -> bool:
+async def apply_patch_pure_python(patch_content: str, target_dir: str) -> bool:
     """Fallback pure-Python unified diff applicator when git apply fails."""
     logger.info("Running pure-Python patch applicator fallback...")
     
@@ -52,18 +53,22 @@ def apply_patch_pure_python(patch_content: str, target_dir: str) -> bool:
                         file_lines.append(line[1:])
             
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
-            with open(full_path, "w", encoding="utf-8") as f:
-                f.write("\n".join(file_lines) + "\n")
+            lock = await file_locks.get_lock(full_path)
+            async with lock:
+                with open(full_path, "w", encoding="utf-8") as f:
+                    f.write("\n".join(file_lines) + "\n")
             logger.info(f"Successfully created new file via fallback: {target_file}")
             applied_any = True
         else:
             # Modify existing file
-            try:
-                with open(full_path, "r", encoding="utf-8") as f:
-                    original_content = f.read().splitlines()
-            except Exception as e:
-                logger.error(f"Failed to read file for patching: {full_path}. Error: {e}")
-                continue
+            lock = await file_locks.get_lock(full_path)
+            async with lock:
+                try:
+                    with open(full_path, "r", encoding="utf-8") as f:
+                        original_content = f.read().splitlines()
+                except Exception as e:
+                    logger.error(f"Failed to read file for patching: {full_path}. Error: {e}")
+                    continue
                 
             hunks = []
             current_hunk = None
@@ -140,8 +145,9 @@ def apply_patch_pure_python(patch_content: str, target_dir: str) -> bool:
                     
             if file_modified:
                 try:
-                    with open(full_path, "w", encoding="utf-8") as f:
-                        f.write("\n".join(new_content) + "\n")
+                    async with lock:
+                        with open(full_path, "w", encoding="utf-8") as f:
+                            f.write("\n".join(new_content) + "\n")
                     logger.info(f"Successfully modified file via fallback: {target_file}")
                     applied_any = True
                 except Exception as e:
@@ -165,9 +171,9 @@ async def apply_patch(patch_content: str, target_dir: str, executor: SandboxExec
             return True
             
         logger.warning(f"git apply failed (exit code {res.return_code}). Trying Python fallback...")
-        return apply_patch_pure_python(patch_content, target_dir)
+        return await apply_patch_pure_python(patch_content, target_dir)
     except Exception as e:
         logger.error(f"Exception during git apply: {e}. Trying Python fallback...")
-        return apply_patch_pure_python(patch_content, target_dir)
+        return await apply_patch_pure_python(patch_content, target_dir)
     finally:
         os.unlink(temp_path)

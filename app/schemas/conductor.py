@@ -11,6 +11,10 @@ class ConductorWorkflow(BaseModel):
         default=False,
         description="Set to true if the user's request is ambiguous or lacks necessary details to formulate a solid plan."
     )
+    depends_on: List[List[int]] = Field(
+        default_factory=list,
+        description="Lists specifying the indices of tasks that must complete before this task can start. E.g., [[], [0], [0, 1]]"
+    )
     clarification_question: str | None = Field(
         default=None,
         description="The question to ask the user if needs_clarification is true."

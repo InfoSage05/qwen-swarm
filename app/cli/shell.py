@@ -50,7 +50,7 @@ class SwarmShell:
                 self.chat_history = session_data.chat_history
                 self.payload = session_data.context_payload
                 
-                self.orchestrator = SwarmOrchestrator(context_payload=self.payload, inference_client=self.client)
+                self.orchestrator = SwarmOrchestrator(context_manager=self.cm, inference_client=self.client)
                 self.orchestrator.state = session_data.swarm_state
                 
                 self.console.print("[bold green]✔ Session Resumed Successfully[/bold green]\n")
@@ -70,7 +70,7 @@ class SwarmShell:
                     self.console.print(f"[bold red]❌ Failed to build repository context:[/bold red] {e}")
                     sys.exit(1)
                     
-            self.orchestrator = SwarmOrchestrator(context_payload=self.payload, inference_client=self.client)
+            self.orchestrator = SwarmOrchestrator(context_manager=self.cm, inference_client=self.client)
             self.chat_history = [
                 {"role": "system", "content": f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{self.payload}"}
             ]
@@ -98,8 +98,7 @@ class SwarmShell:
                 scraped_text = await scrape_url(url)
                 self.cm.add_external_context(url, scraped_text)
                 self.console.print(f"[bold green]✔ Stored URL content in context memory![/bold green]")
-            self.payload = self.cm.retrieve_context()
-            self.orchestrator.context_payload = self.payload
+            self.payload = self.cm.retrieve_for_task(input_text)
             self.chat_history[0]["content"] = f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{self.payload}"
         
         for prefix, handler in self.commands.items():

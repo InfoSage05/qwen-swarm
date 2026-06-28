@@ -27,8 +27,8 @@ MAX_REPAIR_LOOPS = 3
 class SwarmOrchestrator:
     """Central coordinator owning the Conductor workflow."""
     
-    def __init__(self, context_payload: str, inference_client: InferenceClient):
-        self.context_payload = context_payload
+    def __init__(self, context_manager, inference_client: InferenceClient):
+        self.cm = context_manager
         self.client = inference_client
         
         self.event_bus = EventBus()
@@ -68,7 +68,8 @@ class SwarmOrchestrator:
         
         self.state.image_url = image_url
         self.state.user_request = user_request
-        self.state.workflow = await self.conductor.create_workflow(self.context_payload, user_request, self.on_thought_chunk)
+        task_context = self.cm.retrieve_for_task(user_request)
+        self.state.workflow = await self.conductor.create_workflow(task_context, user_request, self.on_thought_chunk)
         
         class DummyPlan:
             tasks = [{"id": str(i), "title": subtask, "description": subtask} for i, subtask in enumerate(self.state.workflow.subtasks)]
@@ -77,7 +78,7 @@ class SwarmOrchestrator:
         await self.event_bus.publish("PLAN_CREATED", self.state.plan)
 
     async def execute_plan(self) -> ReviewDecision:
-        """Phase 2: Execute the dynamic workflow and Sandbox"""
+        """Phase 2: Execute the dynamic workflow and Sandbox using parallel DAG execution"""
         if not hasattr(self.state, 'workflow') or not self.state.workflow:
             raise ValueError("No workflow has been generated. Call generate_plan first.")
             
@@ -87,24 +88,33 @@ class SwarmOrchestrator:
         user_request = self.state.user_request
         image_url = getattr(self.state, 'image_url', None)
         
-        for step_idx, subtask in enumerate(workflow.subtasks):
+        depends_on = getattr(workflow, "depends_on", [])
+        if not depends_on or len(depends_on) != len(workflow.subtasks):
+            depends_on = [[]] + [[i-1] for i in range(1, len(workflow.subtasks))]
+            
+        completed_tasks = set()
+        task_results = {}
+        
+        async def execute_task(step_idx: int, subtask: str):
+            nonlocal final_proposed_patch
             model_id = workflow.model_id[step_idx] if step_idx < len(workflow.model_id) else 0
             access_spec = workflow.access_list[step_idx] if step_idx < len(workflow.access_list) else []
             
             context_responses = []
             if "all" in access_spec or "all" in str(access_spec).lower():
-                context_responses = past_responses.copy()
+                context_responses = [r for r in task_results.values()]
             else:
                 for idx in access_spec:
-                    if isinstance(idx, int) and idx < len(past_responses):
-                        context_responses.append(past_responses[idx])
+                    if isinstance(idx, int) and idx in task_results:
+                        context_responses.append(task_results[idx])
             
             await self.event_bus.publish("TASK_STARTED", [{"task": {"title": subtask}, "agent_id": f"Model {model_id}"}])
             
-            # If model_id is 5, we use the vision subtask path
+            task_context = self.cm.retrieve_for_task(subtask)
+            
             if model_id == 5 and image_url:
                 worker_response = await self.worker.execute_vision_subtask(
-                    context_payload=self.context_payload,
+                    context_payload=task_context,
                     user_request=user_request,
                     subtask=subtask,
                     past_responses=context_responses,
@@ -113,14 +123,12 @@ class SwarmOrchestrator:
                 )
             else:
                 worker_response = await self.worker.execute_subtask(
-                    context_payload=self.context_payload,
+                    context_payload=task_context,
                     user_request=user_request,
                     subtask=subtask,
                     past_responses=context_responses,
                     on_chunk=self.on_thought_chunk
                 )
-            
-            past_responses.append(worker_response.response)
             
             if worker_response.proposed_patch:
                 final_proposed_patch = worker_response.proposed_patch
@@ -130,6 +138,29 @@ class SwarmOrchestrator:
                 status = "Success"
                 feedback = "Completed dynamically"
             await self.event_bus.publish("TASK_COMPLETED", [DummyResult()])
+            return worker_response.response
+
+        wave_num = 1
+        while len(completed_tasks) < len(workflow.subtasks):
+            ready_tasks = []
+            for i, deps in enumerate(depends_on):
+                if i not in completed_tasks and all(d in completed_tasks for d in deps):
+                    ready_tasks.append(i)
+                    
+            if not ready_tasks:
+                raise RuntimeError("Circular dependency or unresolvable task graph detected.")
+                
+            task_ids = [str(i) for i in ready_tasks]
+            await self.event_bus.publish("WAVE_STARTED", {"wave_num": wave_num, "task_ids": task_ids})
+            
+            wave_results = await asyncio.gather(*[execute_task(i, workflow.subtasks[i]) for i in ready_tasks])
+            
+            for i, result in zip(ready_tasks, wave_results):
+                completed_tasks.add(i)
+                task_results[i] = result
+                
+            await self.event_bus.publish("WAVE_COMPLETED", {"wave_num": wave_num, "task_ids": task_ids})
+            wave_num += 1
             
         if final_proposed_patch:
             return await self._run_sandbox_loop(final_proposed_patch)
@@ -179,7 +210,8 @@ class SwarmOrchestrator:
                     repair_plan = RepairPlan(failure_reason=f"Cached repair", affected_files=cached["files_affected"], proposed_fix=cached["proposed_fix"], confidence=1.0)
                 else:
                     await self.event_bus.publish("REPAIR_STARTED", failure)
-                    repair_plan = await self.repair.generate_repair(self.context_payload, failure, evidence, self.on_thought_chunk)
+                    repair_context = self.cm.retrieve_for_task("Fix tests or linting failure: " + failure.message)
+                    repair_plan = await self.repair.generate_repair(repair_context, failure, evidence, self.on_thought_chunk)
                     last_error_sig = error_sig
                     last_proposed_fix = repair_plan.proposed_fix
                     last_files_affected = repair_plan.affected_files
