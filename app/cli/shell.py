@@ -9,7 +9,8 @@ from app.config import settings
 from app.context.context_manager import ContextManager
 from app.inference.client import InferenceClient
 from app.orchestration.orchestrator import SwarmOrchestrator
-from app.orchestration.session_manager import SessionManager
+from app.orchestration.session_store import SessionStore
+import uuid
 from app.cli.tui import build_main_layout, make_user_panel, make_agent_panel, show_startup_banner, show_config_info
 from app.cli.handlers import (
     handle_search, handle_cmd, handle_pr, handle_agent, 
@@ -25,7 +26,8 @@ class SwarmShell:
         self.client = InferenceClient()
         self.orchestrator = None
         self.chat_history = []
-        self.payload = ""
+        self.session_store = SessionStore()
+        self.session_id = str(uuid.uuid4())
         
         self.commands = {
             "/search": handle_search,
@@ -43,20 +45,31 @@ class SwarmShell:
         show_startup_banner(self.console)
         show_config_info(self.console, settings)
         
-        session_data = SessionManager.load_session()
-        if session_data:
-            self.console.print("[bold yellow]Found an existing session![/bold yellow]")
-            if input("Resume previous session? (Y/n): ").strip().lower() != 'n':
-                self.chat_history = session_data.chat_history
-                self.payload = session_data.context_payload
-                
-                self.orchestrator = SwarmOrchestrator(context_manager=self.cm, inference_client=self.client)
-                self.orchestrator.state = session_data.swarm_state
-                
-                self.console.print("[bold green]✔ Session Resumed Successfully[/bold green]\n")
+        
+        repo_path = os.path.abspath(".")
+        recent_sessions = self.session_store.list_sessions(repo_path)
+        
+        if recent_sessions:
+            self.console.print(f"[bold yellow]Found {len(recent_sessions)} existing session(s) for this repository.[/bold yellow]")
+            if input("Resume most recent session? (Y/n): ").strip().lower() != 'n':
+                recent_id = recent_sessions[0].id
+                session_data = self.session_store.load(recent_id)
+                if session_data:
+                    self.session_id = session_data.id
+                    self.chat_history = session_data.chat_history
+                    
+                    self.orchestrator = SwarmOrchestrator(context_manager=self.cm, inference_client=self.client)
+                    self.orchestrator.state = session_data.swarm_state
+                    self.payload = "Loaded from SessionStore" # retrieve_for_task will handle context fetching
+                    
+                    self.console.print("[bold green]✔ Session Resumed Successfully[/bold green]\n")
+                else:
+                    self.console.print("[bold red]Failed to load session data.[/bold red]")
+                    session_data = None
             else:
-                SessionManager.clear_session()
                 session_data = None
+        else:
+            session_data = None
                 
         if not session_data:
             with self.console.status("[bold yellow]Building Repository Context Graph...[/bold yellow]") as status:
@@ -106,6 +119,25 @@ class SwarmShell:
                 await handler(self, input_text, prefix)
                 return
                 
+        if input_text == "/sessions":
+            repo_path = os.path.abspath(".")
+            sessions = self.session_store.list_sessions(repo_path)
+            if not sessions:
+                self.console.print("[yellow]No saved sessions found.[/yellow]")
+            else:
+                self.console.print("[bold cyan]Recent Sessions:[/bold cyan]")
+                for idx, s in enumerate(sessions):
+                    self.console.print(f"  [{idx}] {s.id} (Updated: {s.updated_at})")
+                choice = self.console.input("Enter session number to resume (or press Enter to cancel): ").strip()
+                if choice.isdigit() and 0 <= int(choice) < len(sessions):
+                    s_data = self.session_store.load(sessions[int(choice)].id)
+                    if s_data:
+                        self.session_id = s_data.id
+                        self.chat_history = s_data.chat_history
+                        self.orchestrator.state = s_data.swarm_state
+                        self.console.print("[bold green]✔ Switched to session![/bold green]")
+            return
+                
         # Bash aliases
         BASH_COMMANDS = ("ls", "cat", "git", "python", "mkdir", "rm", "cp", "mv", "grep", "echo", "pwd", "cd")
         if any(input_text.startswith(cmd + " ") or input_text == cmd for cmd in BASH_COMMANDS):
@@ -124,6 +156,7 @@ class SwarmShell:
         self.console.print("  [bold]/execute[/bold]      - Execute the currently generated plan")
         self.console.print("  [bold]/search q[/bold]      - Perform web search")
         self.console.print("  [bold]/pr url[/bold]       - Run AI PR Review Assistant")
+        self.console.print("  [bold]/sessions[/bold]      - List and resume past sessions")
         self.console.print("  [bold]/quit[/bold]         - Exit")
         
         while True:

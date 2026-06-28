@@ -8,8 +8,8 @@ from rich.markdown import Markdown
 from rich.box import ROUNDED
 
 from app.tools.web_search import perform_web_search
-from app.orchestration.session_manager import SessionManager
 from app.cli.tui import build_main_layout, make_user_panel, make_agent_panel
+import os
 
 async def run_terminal_command_live(command: str, console) -> int:
     cmd = command.strip()
@@ -174,7 +174,7 @@ async def _run_agentic_workflow(shell, task_request: str, mode: str, image_url: 
             shell.orchestrator._current_live = None
             
         shell.console.print("\n[bold green]✔ Workflow step completed successfully![/bold green]")
-        SessionManager.save_session(shell.chat_history, shell.payload, shell.orchestrator.state)
+        shell.session_store.save(shell.session_id, os.path.abspath("."), shell.chat_history, shell.orchestrator.state, "context_hash")
         return result
     except Exception as e:
         shell.console.print(f"\n[bold red]❌ Swarm execution failed:[/bold red] {e}")
@@ -210,7 +210,7 @@ async def handle_execute(shell, input_text: str, prefix: str):
 
 async def handle_chat(shell, input_text: str):
     shell.chat_history.append({"role": "user", "content": input_text})
-    SessionManager.save_session(shell.chat_history, shell.payload, shell.orchestrator.state)
+    shell.session_store.save(shell.session_id, os.path.abspath("."), shell.chat_history, shell.orchestrator.state, "context_hash")
     
     user_panel = make_user_panel(input_text)
     shell.console.print(Columns([user_panel], align="right"))
@@ -229,4 +229,4 @@ async def handle_chat(shell, input_text: str):
             live_chat.refresh()
             
     shell.chat_history.append({"role": "assistant", "content": response_content})
-    SessionManager.save_session(shell.chat_history, shell.payload, shell.orchestrator.state)
+    shell.session_store.save(shell.session_id, os.path.abspath("."), shell.chat_history, shell.orchestrator.state, "context_hash")

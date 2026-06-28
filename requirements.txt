@@ -43,6 +43,11 @@ tree-sitter-python>=0.21.0
 networkx>=3.2.1
 chromadb>=0.5.0
 sentence-transformers>=3.0.0
+tree-sitter-javascript
+tree-sitter-typescript
+tree-sitter-java
+tree-sitter-go
+tree-sitter-rust
 
 # ---------------------------------------------------------------------------
 # MODAL CLI — needed locally to deploy / run modal_server.py
