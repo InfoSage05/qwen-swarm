@@ -12,10 +12,16 @@ class RepairAgent(BaseAgent):
 
     from typing import Callable, Awaitable, Optional
 
-    async def generate_repair(self, context_payload: str, failure: FailureReport, evidence: ExecutionEvidence, stream_callback: Optional[Callable[[str], Awaitable[None]]] = None) -> RepairPlan:
+    async def generate_repair(self, context_payload: str, failure: FailureReport, evidence: ExecutionEvidence, stream_callback: Optional[Callable[[str], Awaitable[None]]] = None, last_error_sig: Optional[str] = None, last_proposed_fix: Optional[str] = None, temperature: float = 0.3) -> RepairPlan:
         prompt = (
             f"Generate a repair plan for the following failure:\n"
             f"Failure: {failure.model_dump_json()}\n"
             f"Execution Evidence: {evidence.model_dump_json()}\n"
         )
-        return await self.run(context_payload, prompt, RepairPlan, stream_callback)
+        if last_error_sig and last_proposed_fix:
+            prompt += (
+                f"\nIMPORTANT: Your previous proposed fix did not resolve the error and resulted in the same or similar failure.\n"
+                f"Previous Fix Diff:\n{last_proposed_fix}\n"
+                f"You MUST propose a DIFFERENT approach this time.\n"
+            )
+        return await self.run(context_payload, prompt, RepairPlan, stream_callback, temperature)

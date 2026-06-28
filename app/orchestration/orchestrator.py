@@ -209,9 +209,23 @@ class SwarmOrchestrator:
                 if cached:
                     repair_plan = RepairPlan(failure_reason=f"Cached repair", affected_files=cached["files_affected"], proposed_fix=cached["proposed_fix"], confidence=1.0)
                 else:
+                    
+                    temperature = 0.3
+                    if last_error_sig == error_sig:
+                        logger.warning(f"Repeated error signature {error_sig}. Applying backoff and increasing temperature.")
+                        import asyncio
+                        await asyncio.sleep(2 ** self.state.repair_attempts)
+                        temperature = 0.7
+                        
                     await self.event_bus.publish("REPAIR_STARTED", failure)
                     repair_context = self.cm.retrieve_for_task("Fix tests or linting failure: " + failure.message)
-                    repair_plan = await self.repair.generate_repair(repair_context, failure, evidence, self.on_thought_chunk)
+                    repair_plan = await self.repair.generate_repair(
+                        repair_context, failure, evidence, 
+                        stream_callback=self.on_thought_chunk,
+                        last_error_sig=last_error_sig if last_error_sig == error_sig else None,
+                        last_proposed_fix=last_proposed_fix if last_error_sig == error_sig else None,
+                        temperature=temperature
+                    )
                     last_error_sig = error_sig
                     last_proposed_fix = repair_plan.proposed_fix
                     last_files_affected = repair_plan.affected_files

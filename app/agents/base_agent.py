@@ -29,7 +29,7 @@ class BaseAgent:
         
     from typing import Callable, Awaitable, Optional
 
-    async def run(self, context_payload: str, user_prompt: str, schema_class: Type[BaseModel], stream_callback: Optional[Callable[[str], Awaitable[None]]] = None) -> BaseModel:
+    async def run(self, context_payload: str, user_prompt: str, schema_class: Type[BaseModel], stream_callback: Optional[Callable[[str], Awaitable[None]]] = None, temperature: float = 0.3) -> BaseModel:
         messages = self.build_messages(context_payload, user_prompt)
         schema = schema_class.model_json_schema()
         
@@ -37,7 +37,8 @@ class BaseAgent:
             accumulated_json = ""
             async for chunk in self.client.chat_stream(
                 messages=messages,
-                response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}}
+                response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}},
+                temperature=temperature
             ):
                 accumulated_json += chunk
                 await stream_callback(chunk)
@@ -47,7 +48,8 @@ class BaseAgent:
         else:
             response = await self.client.chat(
                 messages=messages,
-                response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}}
+                response_format={"type": "json_schema", "json_schema": {"schema": schema, "name": schema_class.__name__}},
+                temperature=temperature
             )
             return self.validate_response(response, schema_class)
         
