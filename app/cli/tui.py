@@ -5,6 +5,7 @@ from rich.layout import Layout
 from rich.table import Table
 from rich.console import Group
 from rich.markdown import Markdown
+from rich.syntax import Syntax
 from rich.box import ROUNDED
 
 def build_main_layout() -> Layout:
@@ -39,11 +40,23 @@ def update_layout(layout: Layout, state, log_lines: list, thought_content: str):
     if log_lines:
         main_content.append(Text("\n".join(log_lines[-10:])))
         
-    think_match = re.search(r'<(think|thought)>(.*?)(?:</\1>|$)', thought_content, re.DOTALL | re.IGNORECASE)
-    if think_match:
-        actual_thought = think_match.group(2).strip()
-        if actual_thought:
-            main_content.append(Panel(Markdown(actual_thought), title="💭 Agent Thinking...", border_style="cyan", box=ROUNDED))
+    parts = re.split(r'(```diff\n.*?(?:```|$))', thought_content, flags=re.DOTALL | re.IGNORECASE)
+    
+    formatted_items = []
+    for part in parts:
+        if part.lower().startswith("```diff"):
+            diff_text = part[7:]
+            if diff_text.endswith("```"):
+                diff_text = diff_text[:-3]
+            formatted_items.append(Syntax(diff_text, "diff", theme="monokai", word_wrap=True))
+        else:
+            think_match = re.search(r'<(?:think|thought)>(.*?)(?:</(?:think|thought)>|$)', part, re.DOTALL | re.IGNORECASE)
+            text = think_match.group(1).strip() if think_match else part.strip()
+            if text:
+                formatted_items.append(Markdown(text))
+                
+    if formatted_items:
+        main_content.append(Panel(Group(*formatted_items), title="💭 Agent Output...", border_style="cyan", box=ROUNDED))
     
     layout["main"].update(Panel(Group(*main_content), title="🚀 Swarm Execution", border_style="blue", box=ROUNDED))
 
