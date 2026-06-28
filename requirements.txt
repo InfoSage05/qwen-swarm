@@ -33,6 +33,7 @@ fastapi>=0.103.0
 uvicorn>=0.23.2
 pydantic-settings>=2.0.3
 keyring>=24.0.0
+docker>=7.0.0
 
 # ---------------------------------------------------------------------------
 # CONTEXT LAYER — local parsing dependencies
