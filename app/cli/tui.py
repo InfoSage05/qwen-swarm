@@ -38,7 +38,11 @@ def update_layout(layout: Layout, state, log_lines: list, thought_content: str):
     
     main_content = []
     if log_lines:
-        main_content.append(Text("\n".join(log_lines[-10:])))
+        for line in log_lines[-8:]:
+            if isinstance(line, str):
+                main_content.append(Text(line))
+            else:
+                main_content.append(line)
         
     parts = re.split(r'(```diff\n.*?(?:```|$))', thought_content, flags=re.DOTALL | re.IGNORECASE)
     
@@ -76,7 +80,7 @@ def show_startup_banner(console):
     ))
 
 def show_config_info(console, settings):
-    console.print(f"[bold cyan]Configuration Loaded:[/bold cyan]")
+    console.print("[bold cyan]Configuration Loaded:[/bold cyan]")
     console.print(f"  • Backend Type: [bold green]{settings.BACKEND_TYPE}[/bold green]")
     console.print(f"  • Model Name: [bold green]{settings.MODEL_NAME}[/bold green]")
     console.print(f"  • Endpoint URL: [bold green]{settings.MODAL_ENDPOINT_URL}[/bold green]\n")

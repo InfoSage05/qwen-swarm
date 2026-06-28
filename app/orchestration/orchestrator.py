@@ -3,7 +3,8 @@ import shutil
 import re
 import hashlib
 import logging
-from typing import List, Optional
+import asyncio
+from typing import Optional
 
 from app.inference.client import InferenceClient
 from app.agents.conductor_agent import ConductorAgent
@@ -82,7 +83,6 @@ class SwarmOrchestrator:
         if not hasattr(self.state, 'workflow') or not self.state.workflow:
             raise ValueError("No workflow has been generated. Call generate_plan first.")
             
-        past_responses = []
         final_proposed_patch = None
         workflow = self.state.workflow
         user_request = self.state.user_request
@@ -127,7 +127,8 @@ class SwarmOrchestrator:
                     user_request=user_request,
                     subtask=subtask,
                     past_responses=context_responses,
-                    on_chunk=self.on_thought_chunk
+                    on_chunk=self.on_thought_chunk,
+                    on_event=self.event_bus.publish
                 )
             
             if worker_response.proposed_patch:
@@ -207,7 +208,7 @@ class SwarmOrchestrator:
                 cached = self.memory.lookup_repair(error_sig)
                 
                 if cached:
-                    repair_plan = RepairPlan(failure_reason=f"Cached repair", affected_files=cached["files_affected"], proposed_fix=cached["proposed_fix"], confidence=1.0)
+                    repair_plan = RepairPlan(failure_reason="Cached repair", affected_files=cached["files_affected"], proposed_fix=cached["proposed_fix"], confidence=1.0)
                 else:
                     
                     temperature = 0.3

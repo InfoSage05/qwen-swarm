@@ -8,7 +8,7 @@ def save_key(provider: str, key: str) -> None:
     """Save an API key to the OS native keychain."""
     try:
         keyring.set_password(SERVICE_NAME, provider, key)
-    except Exception as e:
+    except Exception:
         # Fallback to config file if keyring is unavailable
         _fallback_save_key(provider, key)
 

@@ -1,5 +1,4 @@
 from typing import List
-from pathlib import Path
 from app.context.models import SymbolNode
 import logging
 

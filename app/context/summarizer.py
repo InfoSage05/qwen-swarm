@@ -1,5 +1,4 @@
-from typing import List
-from app.context.models import RepositorySummary, ModuleSummary, FileSummary, RepositoryGraph
+from app.context.models import RepositorySummary, FileSummary, RepositoryGraph
 
 class RepositorySummarizer:
     """Generates concise summaries of the repository context to avoid brute-force dumping."""

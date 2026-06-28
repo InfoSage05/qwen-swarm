@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import ValidationError
 
 class ConfigurationError(Exception):
     """Raised when there is a critical configuration issue."""

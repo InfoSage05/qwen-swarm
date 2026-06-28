@@ -1,9 +1,7 @@
-import asyncio
 import os
 import re
 import sys
 from rich.console import Console
-from rich.columns import Columns
 
 from app.config import settings
 from app.context.context_manager import ContextManager
@@ -11,7 +9,7 @@ from app.inference.client import InferenceClient
 from app.orchestration.orchestrator import SwarmOrchestrator
 from app.orchestration.session_store import SessionStore
 import uuid
-from app.cli.tui import build_main_layout, make_user_panel, make_agent_panel, show_startup_banner, show_config_info
+from app.cli.tui import show_startup_banner, show_config_info
 from app.cli.handlers import (
     handle_search, handle_cmd, handle_pr, handle_agent, 
     handle_plan, handle_execute, handle_chat
@@ -93,7 +91,7 @@ class SwarmShell:
             live_instance_pause = getattr(self.orchestrator, '_current_live', None)
             if live_instance_pause:
                 live_instance_pause.stop()
-            self.console.print(f"\n[bold yellow]⚠️ Permission Request[/bold yellow]")
+            self.console.print("\n[bold yellow]⚠️ Permission Request[/bold yellow]")
             self.console.print(f"The Swarm wants to execute: [bold white]{cmd}[/bold white]")
             choice = input("Allow? (Y/n): ").strip().lower()
             if live_instance_pause:
@@ -110,7 +108,7 @@ class SwarmShell:
                 self.console.print(f"[cyan]Scraping URL: {url}[/cyan]")
                 scraped_text = await scrape_url(url)
                 self.cm.add_external_context(url, scraped_text)
-                self.console.print(f"[bold green]✔ Stored URL content in context memory![/bold green]")
+                self.console.print("[bold green]✔ Stored URL content in context memory![/bold green]")
             self.payload = self.cm.retrieve_for_task(input_text)
             self.chat_history[0]["content"] = f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{self.payload}"
         

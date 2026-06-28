@@ -1,4 +1,3 @@
-import os
 import getpass
 from pathlib import Path
 from rich.console import Console

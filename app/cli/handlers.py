@@ -8,8 +8,7 @@ from rich.markdown import Markdown
 from rich.box import ROUNDED
 
 from app.tools.web_search import perform_web_search
-from app.cli.tui import build_main_layout, make_user_panel, make_agent_panel
-import os
+from app.cli.tui import build_main_layout, make_user_panel
 
 async def run_terminal_command_live(command: str, console) -> int:
     cmd = command.strip()
@@ -64,7 +63,7 @@ async def handle_search(shell, input_text: str, prefix: str):
         search_results = await perform_web_search(query)
         shell.console.print(search_results)
         shell.cm.add_external_context(f"Web Search: {query}", search_results)
-        shell.console.print(f"[bold green]✔ Stored search results in context memory![/bold green]")
+        shell.console.print("[bold green]✔ Stored search results in context memory![/bold green]")
         shell.payload = shell.cm.retrieve_context()
         shell.orchestrator.context_payload = shell.payload
         shell.chat_history[0]["content"] = f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{shell.payload}"
@@ -80,7 +79,7 @@ async def handle_pr(shell, input_text: str, prefix: str):
     shell.console.print(f"[bold magenta]Running Release Assistant for: {pr_context}[/bold magenta]")
     report = await shell.orchestrator.run_release_assistant(pr_context)
     if report:
-        shell.console.print(f"[bold green]Release Report Generated![/bold green]")
+        shell.console.print("[bold green]Release Report Generated![/bold green]")
         shell.console.print(report.model_dump_json(indent=2))
 
 async def _run_agentic_workflow(shell, task_request: str, mode: str, image_url: str = None):
@@ -100,17 +99,28 @@ async def _run_agentic_workflow(shell, task_request: str, mode: str, image_url: 
         async def handler(data=None):
             nonlocal thought_content
             thought_content = ""
-            log_msg = f"[{style}]{emoji} {event_name}[/{style}]"
-            if data:
-                if event_name == "WORKFLOW_STARTED":
-                    log_msg += f": {data}"
-                elif event_name == "TASK_COMPLETED":
-                    log_msg += f": Finished {len(data)} tasks."
-                elif event_name == "EXECUTION_STARTED":
-                    log_msg += f": Workspace path {data}"
-                else:
-                    log_msg += " ..."
-            log_lines.append(log_msg)
+            if event_name == "TOOL_CALLED":
+                args_str = "\n".join([f"{k}: {v}" for k, v in data.get("args", {}).items()])
+                panel = Panel(args_str, title=f"🛠️ [bold yellow]Tool Call: {data.get('name')}[/bold yellow]", border_style="yellow", box=ROUNDED)
+                log_lines.append(panel)
+            elif event_name == "TOOL_COMPLETED":
+                log_lines.append(f"[{style}]{emoji} Tool {data.get('name')} Finished[/{style}]")
+            elif event_name in ["REPAIR_STARTED", "REVIEW_STARTED"]:
+                msg = str(getattr(data, 'message', data))
+                panel = Panel(msg, title=f"{emoji} [bold {style}]{event_name}[/bold {style}]", border_style=style, box=ROUNDED)
+                log_lines.append(panel)
+            else:
+                log_msg = f"[{style}]{emoji} {event_name}[/{style}]"
+                if data:
+                    if event_name == "WORKFLOW_STARTED":
+                        log_msg += f": {data}"
+                    elif event_name == "TASK_COMPLETED":
+                        log_msg += f": Finished {len(data)} tasks."
+                    elif event_name == "EXECUTION_STARTED":
+                        log_msg += f": Workspace path {data}"
+                    else:
+                        log_msg += " ..."
+                log_lines.append(log_msg)
             refresh_ui()
         return handler
 
@@ -122,8 +132,12 @@ async def _run_agentic_workflow(shell, task_request: str, mode: str, image_url: 
     shell.orchestrator.event_bus.subscribe("TASK_COMPLETED", make_event_logger("TASK_COMPLETED", "green", "✔"))
     shell.orchestrator.event_bus.subscribe("EXECUTION_STARTED", make_event_logger("EXECUTION_STARTED", "magenta", "📦"))
     shell.orchestrator.event_bus.subscribe("TESTS_COMPLETED", make_event_logger("TESTS_COMPLETED", "green", "📊"))
+    shell.orchestrator.event_bus.subscribe("REPAIR_STARTED", make_event_logger("REPAIR_STARTED", "red", "🔧"))
     shell.orchestrator.event_bus.subscribe("REPAIR_COMPLETED", make_event_logger("REPAIR_COMPLETED", "yellow", "🔧"))
+    shell.orchestrator.event_bus.subscribe("REVIEW_STARTED", make_event_logger("REVIEW_STARTED", "blue", "📝"))
     shell.orchestrator.event_bus.subscribe("REVIEW_COMPLETED", make_event_logger("REVIEW_COMPLETED", "green", "📝"))
+    shell.orchestrator.event_bus.subscribe("TOOL_CALLED", make_event_logger("TOOL_CALLED", "yellow", "🛠️"))
+    shell.orchestrator.event_bus.subscribe("TOOL_COMPLETED", make_event_logger("TOOL_COMPLETED", "green", "✅"))
     
     async def thought_handler(data: str):
         nonlocal thought_content
@@ -145,7 +159,7 @@ async def _run_agentic_workflow(shell, task_request: str, mode: str, image_url: 
                     await shell.orchestrator.generate_plan(task_request, image_url)
                     if getattr(shell.orchestrator.state.workflow, "needs_clarification", False):
                         live.stop()
-                        shell.console.print(f"\n[bold yellow]🤔 The Swarm needs clarification:[/bold yellow]")
+                        shell.console.print("\n[bold yellow]🤔 The Swarm needs clarification:[/bold yellow]")
                         shell.console.print(shell.orchestrator.state.workflow.clarification_question)
                         clarification = input("\nRefine task (or press Enter to ignore and force execution): ").strip()
                         if clarification:

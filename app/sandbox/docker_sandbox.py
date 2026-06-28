@@ -1,5 +1,4 @@
 import asyncio
-import os
 import tarfile
 import io
 import time
@@ -83,5 +82,5 @@ class DockerSandbox(BaseSandbox):
             if container:
                 try:
                     container.stop(timeout=1)
-                except:
+                except Exception:
                     pass

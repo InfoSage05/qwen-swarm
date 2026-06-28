@@ -3,7 +3,6 @@ import logging
 
 from app.inference.client import InferenceClient
 from app.schemas.conductor import WorkerResponse
-import os
 from app.tools.git import git_diff, git_branch, git_commit_auto
 from app.sandbox.executor import SandboxExecutor
 
@@ -43,7 +42,8 @@ class WorkerAgent:
         user_request: str,
         subtask: str,
         past_responses: List[str],
-        on_chunk: Callable[[str], Awaitable[None]] = None
+        on_chunk: Callable[[str], Awaitable[None]] = None,
+        on_event: Callable[[str, Any], Awaitable[None]] = None
     ) -> WorkerResponse:
         
         user_content = f"ORIGINAL USER REQUEST:\n{user_request}\n\nREPOSITORY CONTEXT:\n{context_payload}\n\n"
@@ -77,6 +77,8 @@ class WorkerAgent:
                 if worker_res.tool_calls:
                     tool_outputs = []
                     for tc in worker_res.tool_calls:
+                        if on_event:
+                            await on_event("TOOL_CALLED", {"name": tc.name, "args": tc.args})
                         if tc.name == "git_diff":
                             out = await git_diff(tc.args.get("target_dir", "."), executor)
                             tool_outputs.append(f"git_diff output: {out}")
@@ -88,9 +90,12 @@ class WorkerAgent:
                             tool_outputs.append(f"git_commit_auto output: {out}")
                         else:
                             tool_outputs.append(f"Unknown tool: {tc.name}")
+                            
+                        if on_event:
+                            await on_event("TOOL_COMPLETED", {"name": tc.name, "result": "Success" if out else "Failed/No Output"})
                     
                     messages.append({"role": "assistant", "content": f"Thought: {worker_res.response}\nTool calls: {[t.name for t in worker_res.tool_calls]}"})
-                    messages.append({"role": "user", "content": f"Tool Execution Results:\n" + "\n".join(tool_outputs)})
+                    messages.append({"role": "user", "content": "Tool Execution Results:\n" + "\n".join(tool_outputs)})
                     continue
                 else:
                     return worker_res

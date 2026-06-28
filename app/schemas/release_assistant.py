@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List
 
 class ReleaseReport(BaseModel):
     is_ready: bool = Field(..., description="Whether the PR is ready for release based on the checklist.")

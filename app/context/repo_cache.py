@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from app.context.models import RepositoryGraph, RepositorySummary
 import logging

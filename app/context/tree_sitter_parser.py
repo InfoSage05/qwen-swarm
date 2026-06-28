@@ -1,6 +1,5 @@
 from pathlib import Path
-import tree_sitter_python as tspython
-from tree_sitter import Language, Parser
+from tree_sitter import Parser
 import logging
 from app.context.language_registry import LanguageRegistry
 

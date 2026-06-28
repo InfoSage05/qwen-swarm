@@ -1,4 +1,3 @@
-import networkx as nx
 from typing import List
 from app.context.models import FileNode, SymbolNode, DependencyEdge, CallEdge, RepositoryGraph
 

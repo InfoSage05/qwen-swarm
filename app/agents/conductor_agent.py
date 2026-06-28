@@ -1,4 +1,4 @@
-from typing import Callable, Any, Awaitable
+from typing import Callable, Awaitable
 import logging
 
 from app.inference.client import InferenceClient
