@@ -16,7 +16,10 @@ class SymbolExtractor:
         def traverse(node, parent_class: str = None):
             try:
                 current_parent = parent_class
-                if node.type == 'function_definition':
+                is_func = 'function' in node.type or 'method' in node.type
+                is_class = 'class' in node.type or 'interface' in node.type or 'trait' in node.type
+
+                if is_func:
                     name_node = node.child_by_field_name('name')
                     if name_node:
                         func_name = content[name_node.start_byte:name_node.end_byte].decode('utf-8')
@@ -29,7 +32,7 @@ class SymbolExtractor:
                             end_line=node.end_point[0] + 1
                         )
                         symbols.append(sym)
-                elif node.type == 'class_definition':
+                elif is_class:
                     name_node = node.child_by_field_name('name')
                     if name_node:
                         class_name = content[name_node.start_byte:name_node.end_byte].decode('utf-8')

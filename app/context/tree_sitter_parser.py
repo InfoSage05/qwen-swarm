@@ -2,28 +2,37 @@ from pathlib import Path
 import tree_sitter_python as tspython
 from tree_sitter import Language, Parser
 import logging
+from app.context.language_registry import LanguageRegistry
 
 logger = logging.getLogger(__name__)
 
 class TreeSitterParser:
-    """Parses source code into syntax trees using Tree-sitter."""
+    """Parses source code into syntax trees using Tree-sitter for multiple languages."""
     
     def __init__(self):
-        try:
-            self.PY_LANGUAGE = Language(tspython.language())
-            self.parser = Parser(self.PY_LANGUAGE)
-        except Exception as e:
-            logger.error(f"Failed to initialize tree-sitter: {e}")
-            self.parser = None
+        self.registry = LanguageRegistry()
+        self.parsers = {}
 
     def parse_file(self, file_path: Path):
-        """Parse a Python file and return the Tree-sitter AST root node and raw bytes."""
-        if not self.parser:
-            return None, b""
+        """Parse a file based on its extension and return AST root and raw bytes."""
+        ext = file_path.suffix.lower()
+        language = self.registry.get_language(ext)
+        if not language:
+            try:
+                # Plain text fallback
+                content = file_path.read_bytes()
+                return None, content
+            except Exception:
+                return None, b""
+                
+        if ext not in self.parsers:
+            parser = Parser(language)
+            self.parsers[ext] = parser
             
+        parser = self.parsers[ext]
         try:
             content = file_path.read_bytes()
-            tree = self.parser.parse(content)
+            tree = parser.parse(content)
             return tree.root_node, content
         except Exception as e:
             logger.warning(f"Parser failed for {file_path}: {e}")
