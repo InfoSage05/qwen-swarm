@@ -247,3 +247,24 @@ async def handle_chat(shell, input_text: str):
             
     shell.chat_history.append({"role": "assistant", "content": response_content})
     shell.session_store.save(shell.session_id, os.path.abspath("."), shell.chat_history, shell.orchestrator.state, "context_hash")
+
+async def handle_benchmark(shell, input_text: str, prefix: str):
+    from app.benchmark.benchmark_runner import BenchmarkRunner
+    from app.benchmark.report_generator import ReportGenerator
+    import os
+    from rich.markdown import Markdown
+    from rich.panel import Panel
+    
+    shell.console.print("[bold yellow]Running Benchmark Suite... This may take a few seconds.[/bold yellow]")
+    runner = BenchmarkRunner()
+    reports = await runner.run_all()
+    
+    generator = ReportGenerator()
+    report_path = os.path.abspath("benchmark_report.md")
+    generator.generate_markdown(reports, report_path)
+    
+    with open(report_path, "r", encoding="utf-8") as f:
+        md_content = f.read()
+    
+    shell.console.print(Panel(Markdown(md_content), title="[bold magenta]Performance Benchmarks[/bold magenta]", border_style="magenta"))
+    shell.console.print(f"[bold green]✔ Saved detailed report to {report_path}[/bold green]")

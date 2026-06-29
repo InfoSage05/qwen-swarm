@@ -13,7 +13,7 @@ import uuid
 from app.cli.tui import show_startup_banner, show_config_info, make_user_panel
 from app.cli.handlers import (
     handle_search, handle_cmd, handle_pr, handle_agent, 
-    handle_plan, handle_execute, handle_chat
+    handle_plan, handle_execute, handle_chat, handle_benchmark
 )
 
 console = Console()
@@ -35,6 +35,7 @@ class SwarmShell:
             "/swarm": handle_agent,
             "/plan": handle_plan,
             "/execute": handle_execute,
+            "/benchmark": handle_benchmark,
             "!": handle_cmd,
             "/cmd": handle_cmd,
             "/run": handle_cmd
@@ -170,6 +171,7 @@ class SwarmShell:
         self.console.print("  [bold]/execute[/bold]      - Execute the currently generated plan")
         self.console.print("  [bold]/search q[/bold]      - Perform web search")
         self.console.print("  [bold]/pr url[/bold]       - Run AI PR Review Assistant")
+        self.console.print("  [bold]/benchmark[/bold]    - Generate performance metrics report")
         self.console.print("  [bold]/sessions[/bold]      - List and resume past sessions")
         self.console.print("  [bold]/quit[/bold]         - Exit")
         
