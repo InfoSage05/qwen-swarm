@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     GLM_ENDPOINT_URL: Optional[str] = "https://api.z.ai/api/coding/paas/v4"
     OPENROUTER_API_KEY: Optional[str] = None
     OLLAMA_HOST: Optional[str] = "http://localhost:11434"
+    TAVILY_API_KEY: Optional[str] = None
 
     # Load from env vars, fallback to .env
     model_config = SettingsConfigDict(

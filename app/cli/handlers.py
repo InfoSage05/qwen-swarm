@@ -46,8 +46,12 @@ async def run_terminal_command_live(command: str, console) -> int:
                 live.refresh()
             await process.wait()
             if not output_text:
-                output_text = f"Command finished with exit code {process.returncode}."
-                live.update(Panel(Text(output_text), title=f"💻 Terminal: {cmd}", border_style="blue", box=ROUNDED))
+                if process.returncode == 0:
+                    output_text = "Command executed successfully (No output)."
+                    live.update(Panel(Text(output_text), title=f"💻 Terminal: {cmd}", border_style="green", box=ROUNDED))
+                else:
+                    output_text = f"Command failed with exit code {process.returncode}."
+                    live.update(Panel(Text(output_text), title=f"💻 Terminal: {cmd}", border_style="red", box=ROUNDED))
                 live.refresh()
             return process.returncode
         except Exception as e:
