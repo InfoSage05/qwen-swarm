@@ -181,7 +181,7 @@ class SwarmOrchestrator:
         if final_proposed_patch:
             return await self._run_sandbox_loop(final_proposed_patch)
             
-        return ReviewDecision(approved=True, feedback="No code changes proposed.", confidence=1.0)
+        return ReviewDecision(approved=True, reason="No code changes proposed.")
 
     async def receive_request(self, user_request: str, image_url: Optional[str] = None) -> ReviewDecision:
         await self.generate_plan(user_request, image_url)
@@ -261,4 +261,4 @@ class SwarmOrchestrator:
                         os.makedirs(os.path.dirname(dst), exist_ok=True)
                         shutil.copy2(src, dst)
                         
-            return ReviewDecision(approved=is_healthy, feedback="Sandbox execution finished.", confidence=1.0 if is_healthy else 0.0)
+            return ReviewDecision(approved=is_healthy, reason="Sandbox execution finished.")
