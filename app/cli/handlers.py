@@ -46,10 +46,10 @@ async def run_terminal_command_live(command: str, console) -> int:
                 live.refresh()
             await process.wait()
             if not output_text:
-                output_text = f"Command finished with exit code {process.return_code}."
+                output_text = f"Command finished with exit code {process.returncode}."
                 live.update(Panel(Text(output_text), title=f"💻 Terminal: {cmd}", border_style="blue", box=ROUNDED))
                 live.refresh()
-            return process.return_code
+            return process.returncode
         except Exception as e:
             output_text += f"\nExecution failed: {str(e)}"
             live.update(Panel(Text(output_text), title=f"💻 Terminal: {cmd}", border_style="red", box=ROUNDED))
@@ -65,8 +65,10 @@ async def handle_search(shell, input_text: str, prefix: str):
         shell.cm.add_external_context(f"Web Search: {query}", search_results)
         shell.console.print("[bold green]✔ Stored search results in context memory![/bold green]")
         shell.payload = shell.cm.retrieve_context()
-        shell.orchestrator.context_payload = shell.payload
-        shell.chat_history[0]["content"] = f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{shell.payload}"
+        if shell.orchestrator:
+            shell.orchestrator.context_payload = shell.payload
+        if shell.chat_history:
+            shell.chat_history[0]["content"] = f"You are a helpful assistant discussing the recent Agentic Swarm Workflow.\nContext Payload:\n{shell.payload}"
 
 async def handle_cmd(shell, input_text: str, prefix: str):
     cmd = input_text[len(prefix):].strip()

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import Any, List, Optional
 from app.schemas.planner import Plan, Task
 from app.schemas.executor import ExecutorResult
 from app.schemas.reviewer import ReviewDecision
@@ -20,3 +20,8 @@ class SwarmState(BaseModel):
     evidence: Optional[ExecutionEvidence] = None
     failure_reports: List[FailureReport] = Field(default_factory=list)
     repair_attempts: int = 0
+    
+    # Orchestrator runtime fields
+    image_url: Optional[str] = None
+    user_request: Optional[str] = None
+    workflow: Optional[Any] = None

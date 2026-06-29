@@ -67,9 +67,19 @@ class SwarmOrchestrator:
         """Phase 1: Conductor dynamically generates the topology and subtasks"""
         await self.event_bus.publish("WORKFLOW_STARTED", user_request)
         
+        self.memory.prune_outdated_memory(days_old=30)
+        if user_request.lower().startswith("prefer ") or user_request.lower().startswith("always "):
+            self.memory.record_preference(user_request)
+            
         self.state.image_url = image_url
         self.state.user_request = user_request
         task_context = self.cm.retrieve_for_task(user_request)
+        
+        preferences = self.memory.lookup_preferences(limit=5)
+        if preferences:
+            prefs_text = "\n".join([f"- {p}" for p in preferences])
+            task_context += f"\n\nUser Preferences to respect:\n{prefs_text}\n"
+            
         self.state.workflow = await self.conductor.create_workflow(task_context, user_request, self.on_thought_chunk)
         
         class DummyPlan:
@@ -111,6 +121,11 @@ class SwarmOrchestrator:
             await self.event_bus.publish("TASK_STARTED", [{"task": {"title": subtask}, "agent_id": f"Model {model_id}"}])
             
             task_context = self.cm.retrieve_for_task(subtask)
+            
+            preferences = self.memory.lookup_preferences(limit=5)
+            if preferences:
+                prefs_text = "\n".join([f"- {p}" for p in preferences])
+                task_context += f"\n\nUser Preferences to respect:\n{prefs_text}\n"
             
             if model_id == 5 and image_url:
                 worker_response = await self.worker.execute_vision_subtask(

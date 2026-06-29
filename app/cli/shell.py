@@ -43,6 +43,18 @@ class SwarmShell:
         show_startup_banner(self.console)
         show_config_info(self.console, settings)
         
+        if input("\nChange AI backend configuration? (y/N): ").strip().lower() == 'y':
+            from app.cli.setup import setup_command
+            import importlib
+            import app.config
+            import app.inference.client
+            setup_command()
+            # Reload config to apply new settings
+            importlib.reload(app.config)
+            importlib.reload(app.inference.client)
+            self.client = app.inference.client.InferenceClient()
+            self.console.print("\n[bold green]Configuration updated successfully![/bold green]\n")
+        
         
         repo_path = os.path.abspath(".")
         recent_sessions = self.session_store.list_sessions(repo_path)
