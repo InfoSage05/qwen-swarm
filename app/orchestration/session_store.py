@@ -100,11 +100,17 @@ class SessionStore:
             if not row:
                 return None
                 
+            try:
+                swarm_state = SwarmState.model_validate_json(row[2])
+            except Exception:
+                # Stale or schema-incompatible session — discard it gracefully
+                return None
+                
             return SessionData(
                 id=session_id,
                 repo_path=row[0],
                 chat_history=json.loads(row[1]),
-                swarm_state=SwarmState.model_validate_json(row[2]),
+                swarm_state=swarm_state,
                 context_hash=row[3]
             )
             

@@ -2,6 +2,7 @@ import getpass
 from pathlib import Path
 from rich.console import Console
 from app.auth.keystore import save_key
+from app.config import settings
 
 console = Console()
 
@@ -29,20 +30,31 @@ def setup_command():
     backend_id = backends[choice][0]
     
     if backend_id == "dashscope":
-        key = getpass.getpass("Enter your DashScope API Key: ").strip()
+        prompt = "Enter your DashScope API Key (leave empty to keep existing): " if settings.DASHSCOPE_API_KEY else "Enter your DashScope API Key: "
+        key = getpass.getpass(prompt).strip()
         if key:
             save_key("DASHSCOPE_API_KEY", key)
             console.print("[green]Saved DashScope API Key securely.[/green]")
+        elif settings.DASHSCOPE_API_KEY:
+            console.print("[green]Kept existing DashScope API Key.[/green]")
+            
     elif backend_id == "glm":
-        key = getpass.getpass("Enter your GLM API Key: ").strip()
+        prompt = "Enter your GLM API Key (leave empty to keep existing): " if settings.GLM_API_KEY else "Enter your GLM API Key: "
+        key = getpass.getpass(prompt).strip()
         if key:
             save_key("GLM_API_KEY", key)
             console.print("[green]Saved GLM API Key securely.[/green]")
+        elif settings.GLM_API_KEY:
+            console.print("[green]Kept existing GLM API Key.[/green]")
+            
     elif backend_id == "vllm":
-        key = getpass.getpass("Enter your OpenAI-compatible API Key: ").strip()
+        prompt = "Enter your OpenAI-compatible API Key (leave empty to keep existing): " if settings.OPENAI_API_KEY else "Enter your OpenAI-compatible API Key: "
+        key = getpass.getpass(prompt).strip()
         if key:
             save_key("OPENAI_API_KEY", key)
             console.print("[green]Saved OPENAI API Key securely.[/green]")
+        elif settings.OPENAI_API_KEY:
+            console.print("[green]Kept existing OPENAI API Key.[/green]")
             
     # Write preference to config
     config_dir = Path.home() / ".config" / "repopilot"

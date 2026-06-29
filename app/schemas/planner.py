@@ -11,4 +11,4 @@ class Task(BaseModel):
     dependencies: List[str] = Field(default_factory=list)
 
 class Plan(BaseModel):
-    tasks: List[Task] = Field(...)
+    tasks: List[Task] = Field(default_factory=list)

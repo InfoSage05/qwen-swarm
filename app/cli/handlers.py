@@ -232,9 +232,6 @@ async def handle_chat(shell, input_text: str):
     shell.chat_history.append({"role": "user", "content": input_text})
     shell.session_store.save(shell.session_id, os.path.abspath("."), shell.chat_history, shell.orchestrator.state, "context_hash")
     
-    user_panel = make_user_panel(input_text)
-    shell.console.print(Columns([user_panel], align="right"))
-    
     response_content = ""
     agent_panel = Panel("...", title="🤖 [bold cyan]Swarm Agent[/bold cyan]", border_style="cyan", box=ROUNDED)
     

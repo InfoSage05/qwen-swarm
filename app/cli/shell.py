@@ -2,6 +2,7 @@ import os
 import re
 import sys
 from rich.console import Console
+from rich.columns import Columns
 
 from app.config import settings
 from app.context.context_manager import ContextManager
@@ -9,7 +10,7 @@ from app.inference.client import InferenceClient
 from app.orchestration.orchestrator import SwarmOrchestrator
 from app.orchestration.session_store import SessionStore
 import uuid
-from app.cli.tui import show_startup_banner, show_config_info
+from app.cli.tui import show_startup_banner, show_config_info, make_user_panel
 from app.cli.handlers import (
     handle_search, handle_cmd, handle_pr, handle_agent, 
     handle_plan, handle_execute, handle_chat
@@ -113,6 +114,9 @@ class SwarmShell:
         self.orchestrator.sandbox.ask_permission = prompt_permission
 
     async def dispatch(self, input_text: str):
+        # Always print the user's input as a right-aligned green panel
+        self.console.print(Columns([make_user_panel(input_text)], align="right"))
+        
         urls = re.findall(r'(https?://[^\s]+)', input_text)
         if urls:
             from app.tools.scrape_url import scrape_url
